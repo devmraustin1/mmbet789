@@ -1,98 +1,591 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMBET789 - Betting System</title>
+    <title>i789 Sport Portal - Live Betting</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Shared Root Variables */
         :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c; /* Red for betting theme */
-            --accent: #f39c12; /* Yellow/Orange accent */
-            --success: #27ae60;
+            --primary-color: #1a472a;
+            --secondary-color: #2d5a3d;
+            --accent-color: #4a7c59;
+            --text-color: #333;
+            --light-bg: #f5f5f5;
+            --border-color: #ddd;
             --danger: #e74c3c;
+            --success: #27ae60;
             --warning: #f39c12;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --sidebar-width: 250px;
-            --frontend-bg: #1c1c1c;
-            --frontend-header: #2f2f2f;
-            --frontend-text: #f0f0f0;
         }
-
-        /* General Styles */
-        * {
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-bg);
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
         }
-
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            transition: all 0.3s;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-
-        /* Frontend (User) Styles */
-        .frontend-container {
-            min-height: 100vh;
-            background-color: var(--frontend-bg);
-            color: var(--frontend-text);
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .tab-content {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            min-height: 600px;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .odds-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .odds-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .odds-cell {
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 8px 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .odds-cell:hover {
+            background-color: #e9f7e9;
+        }
+        
+        .odds-cell.selected {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .match-time {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .controls-container {
+            background-color: white;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .controls-row {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
-
-        .frontend-header {
-            background-color: var(--frontend-header);
-            padding: 10px 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        
+        .controls-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .control-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .control-label {
+            margin-right: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .control-select, .control-input {
+            padding: 5px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .control-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+        
+        .control-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .tab-button {
+            padding: 8px 15px;
+            background-color: #f0f0f0;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        .tab-button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .tab-button:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-input {
+            padding: 5px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            font-size: 0.9em;
+        }
+        
+        .search-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .bet-slip {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 350px;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .bet-slip-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .frontend-header h1 {
-            font-size: 24px;
-            color: var(--accent);
-        }
-
-        .frontend-nav-bar {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            background-color: var(--frontend-header);
-            border-top: 1px solid #333;
-            flex-wrap: wrap;
-        }
-
-        .frontend-nav-bar button, .frontend-actions button {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-            margin: 5px;
-            flex-grow: 1;
-            max-width: 200px;
-        }
-
-        .frontend-nav-bar button:hover, .frontend-actions button:hover {
-            background: #c0392b;
-        }
-
-        .frontend-content {
-            flex: 1;
-            padding: 20px;
+        
+        .bet-slip-content {
+            padding: 10px;
+            max-height: 300px;
             overflow-y: auto;
         }
-
+        
+        .bet-slip-footer {
+            padding: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .bet-item {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .bet-item:last-child {
+            border-bottom: none;
+        }
+        
+        .bet-type-indicator {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .single-bet {
+            background-color: #4a7c59;
+            color: white;
+        }
+        
+        .parlay-bet {
+            background-color: #e67e22;
+            color: white;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .league-header {
+            background-color: #e9f7e9;
+            padding: 8px 15px;
+            font-weight: bold;
+            border-left: 4px solid var(--primary-color);
+            margin-top: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .league-header:first-child {
+            margin-top: 0;
+        }
+        
+        .league-header .toggle-icon {
+            font-weight: bold;
+        }
+        
+        .league-matches {
+            display: block;
+        }
+        
+        .league-matches.collapsed {
+            display: none;
+        }
+        
+        /* Account Statement Styles */
+        .statement-filters {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .statement-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .statement-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .bet-won {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .bet-lost {
+            color: var(--danger);
+            font-weight: bold;
+        }
+        
+        .bet-pending {
+            color: var(--warning);
+            font-weight: bold;
+        }
+        
+        /* League Selection Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        
+        .modal-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            text-align: right;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        
+        .league-category {
+            margin-bottom: 20px;
+        }
+        
+        .league-category h4 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        
+        .league-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .league-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .league-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .league-item.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .league-checkbox {
+            margin-right: 10px;
+        }
+        
+        .no-matches {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .stake-input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .bet-summary {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .bet-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .total-odds {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .potential-win {
+            font-weight: bold;
+            color: var(--success);
+            font-size: 1.2em;
+        }
+        
+        /* Login Modal */
+        .login-modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            padding: 30px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
         .user-info-bar {
             background-color: #333;
             padding: 10px;
@@ -101,60 +594,39 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .user-info-bar span {
-            font-weight: bold;
-            color: var(--accent);
+            color: white;
         }
         
-        /* Betting Match Card Simulation */
-        .match-card {
-            background-color: #2f2f2f;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .match-header {
+        .user-info-bar span {
             font-weight: bold;
-            color: white;
-            margin-bottom: 10px;
-            border-bottom: 1px dashed #555;
-            padding-bottom: 5px;
+            color: var(--accent-color);
         }
-
-        .odd-row {
+        
+        .betting-actions {
             display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-
-        .odd-button {
-            background-color: var(--primary);
+        
+        .betting-action-btn {
+            background-color: var(--primary-color);
             color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background 0.2s;
-            text-align: center;
-            flex: 1;
-            margin: 0 5px;
-            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
         }
-
-        .odd-button:hover {
-            background-color: var(--secondary);
+        
+        .betting-action-btn:hover {
+            background-color: var(--secondary-color);
         }
-
-        .odd-label {
-            font-size: 12px;
-            color: #ccc;
-            margin-bottom: 3px;
+        
+        .betting-action-btn.active {
+            background-color: var(--accent-color);
         }
-
-        /* Support Chat Popup */
+        
         .support-chat-popup {
             position: fixed;
             bottom: 20px;
@@ -165,7 +637,7 @@
         .support-icon {
             width: 60px;
             height: 60px;
-            background-color: #25d366; /* WhatsApp/Viber Green */
+            background-color: #25d366;
             color: white;
             border-radius: 50%;
             display: flex;
@@ -213,89 +685,23 @@
             font-size: 20px;
         }
         
-        .tg-color { color: #0088cc; } /* Telegram */
-        .vb-color { color: #7f5195; } /* Viber - approximation */
-
-
-        /* Admin Panel Styles (From your provided code) */
-        .container { display: flex; min-height: 100vh; }
-        .sidebar { width: var(--sidebar-width); background: var(--primary); color: white; transition: all 0.3s; position: fixed; height: 100vh; overflow-y: auto; z-index: 1000; }
-        .sidebar-header { padding: 20px; background: rgba(0, 0, 0, 0.2); text-align: center; }
-        .sidebar-menu { padding: 0; list-style: none; }
-        .sidebar-menu a { padding: 15px 20px; display: block; color: #bbb; text-decoration: none; transition: all 0.3s; border-left: 3px solid transparent; }
-        .sidebar-menu a:hover, .sidebar-menu a.active { background: rgba(255, 255, 255, 0.1); color: white; border-left: 3px solid var(--secondary); }
-        .sidebar-menu i { margin-right: 10px; width: 20px; text-align: center; }
-        .main-content { flex: 1; margin-left: var(--sidebar-width); transition: all 0.3s; }
-        .header { background: white; padding: 15px 30px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; }
-        .header-left h1 { font-size: 24px; color: var(--primary); }
-        .header-right { display: flex; align-items: center; gap: 15px; }
-        .language-switcher { display: flex; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
-        .lang-btn { padding: 8px 15px; background: white; border: none; cursor: pointer; transition: all 0.3s; }
-        .lang-btn.active { background: var(--secondary); color: white; }
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-        .content { padding: 30px; }
-        .card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); margin-bottom: 20px; overflow: hidden; }
-        .card-header { padding: 15px 20px; background: var(--light); border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .card-body { padding: 20px; }
-        .stats-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; align-items: center; }
-        .stat-icon { width: 60px; height: 60px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 24px; }
-        .stat-info h3 { font-size: 24px; margin-bottom: 5px; }
-        .stat-info p { color: #777; }
-        .bg-primary { background: rgba(52, 152, 219, 0.2); color: #3498db; }
-        .bg-success { background: rgba(39, 174, 96, 0.2); color: var(--success); }
-        .bg-warning { background: rgba(243, 156, 18, 0.2); color: var(--warning); }
-        .bg-danger { background: rgba(231, 76, 60, 0.2); color: var(--danger); }
-        table { width: 100%; border-collapse: collapse; }
-        table th, table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
-        table th { background: var(--light); font-weight: 600; }
-        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-warning { background: var(--warning); color: white; }
-        .btn-sm { padding: 5px 10px; font-size: 13px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-        .tabs { display: flex; border-bottom: 1px solid #ddd; margin-bottom: 20px; }
-        .tab { padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; }
-        .tab.active { border-bottom: 2px solid #3498db; color: #3498db; font-weight: 500; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .login-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, var(--primary), #3498db); }
-        .login-box { background: white; border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); width: 400px; padding: 30px; }
-        .login-header { text-align: center; margin-bottom: 30px; }
-        .login-header h2 { color: var(--primary); margin-bottom: 10px; }
-        .login-footer { text-align: center; margin-top: 20px; color: #777; }
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; border-radius: 8px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
-        .modal-header { padding: 15px 20px; background: var(--light); border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 20px; }
-        .modal-footer { padding: 15px 20px; background: var(--light); border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .chart-container { height: 300px; margin-bottom: 20px; }
-        .danger-text { color: var(--danger); font-weight: bold; }
-
-        @media (max-width: 768px) {
-            .sidebar { width: 70px; text-align: center; }
-            .sidebar-header h3, .sidebar-menu span { display: none; }
-            .sidebar-menu i { margin-right: 0; font-size: 20px; }
-            .main-content { margin-left: 70px; }
-            .form-row { grid-template-columns: 1fr; }
-            .frontend-nav-bar button { flex-basis: 45%; max-width: none; }
+        .tg-color { color: #0088cc; } 
+        .vb-color { color: #7f5195; }
+        
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="globalLoginScreen" class="login-container">
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
         <div class="login-box">
             <div class="login-header">
-                <h2>Betting System Login</h2>
-                <p>Welcome to MMBET789</p>
+                <h2>i789 Sport Portal Login</h2>
+                <p>Welcome to our betting platform</p>
             </div>
-            <form id="globalLoginForm">
+            <form id="loginForm">
                 <div class="form-group">
                     <label for="loginUsername">Username</label>
                     <input type="text" id="loginUsername" class="form-control" placeholder="Enter username" required>
@@ -309,1542 +715,982 @@
                 </div>
             </form>
             <div class="login-footer">
-                <p>Test Credentials: Admin: admin/admin | Agent: agent1/agent1 | User: user1/user1</p>
+                <p>Test Credentials: User: user1/user1 | Admin: admin/admin</p>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="passwordChangeModal">
-        <div class="modal-content" style="max-width: 450px;">
-            <div class="modal-header">
-                <h3>Password Change Required</h3>
-            </div>
-            <div class="modal-body">
-                <p class="danger-text">This is your first login. Please change your password immediately.</p>
-                <form id="passwordChangeForm">
-                    <div class="form-group">
-                        <label>New Password</label>
-                        <input type="password" id="newPassword" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm New Password</label>
-                        <input type="password" id="confirmPassword" class="form-control" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="skipPasswordChange" style="display: none;">Skip (Not Recommended)</button>
-                <button class="btn btn-primary" id="saveNewPassword">Change Password</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="agreementModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>စည်းကမ်းသတ်မှတ်ချက်များ (Terms & Conditions)</h3>
-            </div>
-            <div class="modal-body" style="height: 300px; overflow-y: scroll;">
-                <p>ဤ MMBET789 (သို့မဟုတ် တူညီသည့် အလောင်းအစား စနစ်) အား အသုံးပြုသူများအတွက် စည်းကမ်းသတ်မှတ်ချက်များမှာ အောက်ပါအတိုင်း ဖြစ်ပါသည်။ ရှေ့ဆက်မလုပ်ဆောင်မီ ကျေးဇူးပြု၍ သေချာစွာဖတ်ရှုပါ:</p>
-                <ol>
-                    <li>**အသက်အရွယ် ကန့်သတ်ချက်:** အသုံးပြုသူသည် အသက် ၁၈ နှစ်ပြည့်ပြီးသူ ဖြစ်ရမည်။</li>
-                    <li>**အကောင့်တာဝန်ယူမှု:** မိမိ၏ User Name နှင့် Password ကို လျှို့ဝှက်ထားရှိရန် အသုံးပြုသူ၏ တာဝန်ဖြစ်သည်။ အကောင့်အား အလွဲသုံးစားလုပ်ခြင်း၊ လိမ်လည်ခြင်း၊ အခြားသူတစ်ဦးအား ပေးသုံးခြင်းမှန်သမျှကို လက်ခံမည်မဟုတ်ပါ။</li>
-                    <li>**လောင်းကြေးနှုန်းထားများ:** Odds များသည် အချိန်နှင့်အမျှ ပြောင်းလဲနိုင်ပြီး အလောင်းအစားတင်ပြီးနောက် နောက်ဆုံးအတည်ပြုထားသော Odds အတိုင်းသာ အကျုံးဝင်ပါသည်။</li>
-                    <li>**ငွေသွင်းငွေထုတ် (Deposit/Withdrawal):**
-                        <ul>
-                            <li>အဓိက ငွေကြေးမှာ **MMK (ကျပ်)** ဖြစ်သည်။</li>
-                            <li>ငွေသွင်းငွေထုတ် မှတ်တမ်းအားလုံးကို စနစ်မှ မှတ်တမ်းတင်ထားမည်။</li>
-                            <li>လိမ်လည်မှုသံသယရှိပါက ငွေထုတ်ခြင်းကို ဆိုင်းငံ့နိုင်သည်/ပယ်ဖျက်နိုင်သည်။</li>
-                        </ul>
-                    </li>
-                    <li>**အလောင်းအစား ပယ်ဖျက်ခြင်း/ဆိုင်းငံ့ခြင်း:**
-                        <ul>
-                            <li>စနစ်မှားယွင်းမှု၊ နည်းပညာပိုင်းဆိုင်ရာ ပြဿနာ သို့မဟုတ် မသမာမှုဟု ယူဆရပါက အလောင်းအစားများကို ပယ်ဖျက်ရန် စနစ်တွင် အခွင့်အရေးရှိသည်။</li>
-                            <li>ပွဲရလဒ် မသေချာသေးပါက ပွဲပြီးဆုံးပြီးမှသာ Win/Lose ဆုံးဖြတ်မည်။</li>
-                        </ul>
-                    </li>
-                    <li>**အကောင့် ပိတ်သိမ်းခြင်း/ရပ်ဆိုင်းခြင်း:** စည်းကမ်းချက်များကို ဖောက်ဖျက်ပါက သို့မဟုတ် လုံခြုံရေးအရ အန္တရာယ်ရှိသည်ဟု ယူဆပါက အသုံးပြုသူ၏ အကောင့်ကို အကြောင်းကြားခြင်းမရှိဘဲ ယာယီရပ်ဆိုင်းခြင်း (Banned/Suspended) သို့မဟုတ် အပြီးပိတ်သိမ်းခြင်း (Deactivated) ကို ပြုလုပ်နိုင်သည်။</li>
-                    <li>**စနစ်၏ဆုံးဖြတ်ချက်:** အလောင်းအစားများနှင့် ပတ်သက်၍ အငြင်းပွားမှုတစ်စုံတစ်ရာပေါ်ပေါက်ပါက စနစ် (Admin Panel) ၏ ဆုံးဖြတ်ချက်သည်သာ အပြီးအပိုင် အတည်ဖြစ်သည်။</li>
-                </ol>
-                <p class="danger-text">ဤ စည်းကမ်းသတ်မှတ်ချက်များကို လက်ခံမှသာ ရှေ့ဆက်လုပ်ဆောင်နိုင်မည်ဖြစ်ပါသည်။</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="rejectAgreement">မဖတ်လိုပါ / လက်မခံပါ</button>
-                <button class="btn btn-success" id="acceptAgreement">ဖတ်ပြီးပါပြီ / လက်ခံပါသည်</button>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="userFrontendApp" class="frontend-container" style="display: none;">
-        <div class="frontend-header">
-            <h1>MMBET789</h1>
-            <div style="font-size: 14px;">User: <span id="frontendUsernameDisplay"></span> | Balance: <span id="frontendUserBalanceDisplay" class="danger-text">K0.00</span></div>
-            <button class="btn btn-danger btn-sm" id="frontendLogoutBtn">Logout</button>
-        </div>
-        
-        <div class="frontend-nav-bar" id="mainNavBar">
-            <button data-action="live-bet" class="active"><i class="fas fa-futbol"></i> မောင်း / Parlay Odd</button>
-            <button data-action="single-bet"><i class="fas fa-hand-pointer"></i> Single Bet</button>
-            <button data-action="ht-bet"><i class="fas fa-clock"></i> HT Bet (45 Min)</button>
-            <button data-action="ft-bet"><i class="fas fa-flag-checkered"></i> FT Bet (90 Min)</button>
-            <button data-action="bet-logs"><i class="fas fa-clipboard-list"></i> Bet Acceped Logs</button>
-            <button data-action="financial-logs"><i class="fas fa-money-check-alt"></i> ငွေစာရင်းမှတ်တမ်း</button>
-        </div>
-
-        <div class="frontend-content" id="frontendContentArea">
-            <div id="live-bet-content" class="frontend-sub-content active">
-                <h2>Live Matches / Parlay Odd</h2>
-                <p style="color:#aaa; margin-bottom: 15px;">(Mix Parlay အနေဖြင့် ရွေးချယ်နိုင်သည်)</p>
-                <div class="match-card">
-                    <div class="match-header">18:00 | Chelsea vs Man City | Premier League</div>
-                    <div class="odd-row">
-                        <div class="odd-button" onclick="placeBet('Man City Win', 1.95, 'Parlay')">
-                            <div class="odd-label">Man City Win</div>1.95
-                        </div>
-                        <div class="odd-button" onclick="placeBet('Draw', 3.50, 'Parlay')">
-                            <div class="odd-label">Draw</div>3.50
-                        </div>
-                        <div class="odd-button" onclick="placeBet('Chelsea Win', 3.20, 'Parlay')">
-                            <div class="odd-label">Chelsea Win</div>3.20
-                        </div>
-                    </div>
-                </div>
-                <div class="match-card">
-                    <div class="match-header">20:45 | PSG vs Bayern Munich | Champions League</div>
-                    <div class="odd-row">
-                        <div class="odd-button" onclick="placeBet('Over 2.5', 1.75, 'Parlay')">
-                            <div class="odd-label">Total Over 2.5</div>1.75
-                        </div>
-                        <div class="odd-button" onclick="placeBet('Under 2.5', 2.10, 'Parlay')">
-                            <div class="odd-label">Total Under 2.5</div>2.10
-                        </div>
-                    </div>
+    <!-- Main Application (Initially Hidden) -->
+    <div id="mainApp" class="hidden">
+        <div class="header">
+            <div class="container">
+                <h1>i789 Sport Portal - Live Betting</h1>
+                <div class="user-info-bar">
+                    <div>User: <span id="usernameDisplay"></span> | Balance: <span id="userBalanceDisplay" style="color: var(--warning);">$0.00</span></div>
+                    <button class="btn btn-danger btn-sm" id="logoutBtn">Logout</button>
                 </div>
             </div>
-
-            <div id="single-bet-content" class="frontend-sub-content" style="display: none;">
-                <h2>Single Bet (Home/Away/Over/Under)</h2>
-                <p style="color:#aaa; margin-bottom: 15px;">(တစ်ပွဲချင်းစီကိုသာ ရွေးချယ်နိုင်သည်)</p>
-                <div class="match-card">
-                    <div class="match-header">22:00 | Liverpool vs Arsenal | Home Win/Away Win</div>
-                    <div class="odd-row">
-                        <div class="odd-button" onclick="placeBet('Liverpool Win', 2.05, 'Single')"><div class="odd-label">Liverpool Win</div>2.05</div>
-                        <div class="odd-button" onclick="placeBet('Arsenal Win', 3.45, 'Single')"><div class="odd-label">Arsenal Win</div>3.45</div>
-                        <div class="odd-button" onclick="placeBet('Draw', 3.30, 'Single')"><div class="odd-label">Draw</div>3.30</div>
-                    </div>
-                    <div class="odd-row" style="margin-top: 15px;">
-                        <div class="odd-button" onclick="placeBet('Over 3.5', 2.50, 'Single')"><div class="odd-label">Over 3.5</div>2.50</div>
-                        <div class="odd-button" onclick="placeBet('Under 3.5', 1.50, 'Single')"><div class="odd-label">Under 3.5</div>1.50</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="ht-bet-content" class="frontend-sub-content" style="display: none;">
-                <h2>HT Bet (First Half 45 Minutes)</h2>
-                <p style="color:#aaa; margin-bottom: 15px;">(ပထမပိုင်း ရလဒ်လောင်းကြေးများ)</p>
-                <div class="match-card">
-                    <div class="match-header">19:30 | AC Milan vs Inter Milan | HT Result</div>
-                    <div class="odd-row">
-                        <div class="odd-button" onclick="placeBet('HT Milan Win', 2.80, 'Single')"><div class="odd-label">AC Milan Win</div>2.80</div>
-                        <div class="odd-button" onclick="placeBet('HT Draw', 2.15, 'Single')"><div class="odd-label">Draw</div>2.15</div>
-                        <div class="odd-button" onclick="placeBet('HT Inter Win', 3.10, 'Single')"><div class="odd-label">Inter Milan Win</div>3.10</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="ft-bet-content" class="frontend-sub-content" style="display: none;">
-                <h2>FT Bet (Second Half 45 Minutes)</h2>
-                <p style="color:#aaa; margin-bottom: 15px;">(ဒုတိယပိုင်းရလဒ် (၄၅ မိနစ်အတွင်း) လောင်းကြေးများ)</p>
-                <div class="match-card">
-                    <div class="match-header">23:00 | Real Madrid vs Atletico Madrid | FT Result</div>
-                    <div class="odd-row">
-                        <div class="odd-button" onclick="placeBet('FT Real Win', 2.20, 'Single')"><div class="odd-label">Real Madrid Win</div>2.20</div>
-                        <div class="odd-button" onclick="placeBet('FT Draw', 2.50, 'Single')"><div class="odd-label">Draw</div>2.50</div>
-                        <div class="odd-button" onclick="placeBet('FT Atletico Win', 4.00, 'Single')"><div class="odd-label">Atletico Madrid Win</div>4.00</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="bet-logs-content" class="frontend-sub-content" style="display: none;">
-                <h2>လောင်းထားသော စာရင်းမှတ်တမ်းများ</h2>
-                <table style="width: 100%; color: var(--frontend-text); text-align: left;">
-                    <thead>
-                        <tr style="background-color: #333;">
-                            <th style="padding: 10px;">Bet ID</th>
-                            <th style="padding: 10px;">Match</th>
-                            <th style="padding: 10px;">Bet Type</th>
-                            <th style="padding: 10px;">Amount (K)</th>
-                            <th style="padding: 10px;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userBetLogsTable">
-                        </tbody>
-                </table>
-            </div>
-
-            <div id="financial-logs-content" class="frontend-sub-content" style="display: none;">
-                <h2>ငွေစာရင်းမှတ်တမ်း (Deposit/Withdrawal Logs)</h2>
-                <div class="frontend-actions" style="margin-bottom: 20px; display: flex; gap: 10px;">
-                    <button class="btn-success" onclick="openDepositWithdrawModal('Deposit')">ငွေသွင်းမည် (Deposit)</button>
-                    <button class="btn-warning" onclick="openDepositWithdrawModal('Withdrawal')">ငွေထုတ်မည် (Withdrawal)</button>
-                </div>
-                <table style="width: 100%; color: var(--frontend-text); text-align: left;">
-                    <thead>
-                        <tr style="background-color: #333;">
-                            <th style="padding: 10px;">Date</th>
-                            <th style="padding: 10px;">Type</th>
-                            <th style="padding: 10px;">Amount (K)</th>
-                            <th style="padding: 10px;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userFinancialLogsTable">
-                        </tbody>
-                </table>
-            </div>
         </div>
-    </div>
 
-    <div class="modal" id="financialModal">
-        <div class="modal-content" style="max-width: 450px;">
-            <div class="modal-header">
-                <h3 id="financialModalTitle"></h3>
-                <button class="btn btn-danger close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="financialForm">
-                    <div class="form-group">
-                        <label>Amount (K)</label>
-                        <input type="number" id="financialAmount" class="form-control" required min="1000" placeholder="Minimum K1000">
-                    </div>
-                    <div class="form-group">
-                        <label>Payment Method</label>
-                        <select class="form-control" required>
-                            <option value="">Select Method</option>
-                            <option value="KBZ Pay">KBZ Pay</option>
-                            <option value="Wave Money">Wave Money</option>
-                            <option value="AYA Bank">AYA Bank</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary close-modal">Cancel</button>
-                <button class="btn btn-primary" id="submitFinancial">Submit Request</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="betSlipModal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h3>Place Bet</h3>
-                <button class="btn btn-danger close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Match/Option: <span id="betOption" class="danger-text"></span></p>
-                <p>Odd: <span id="betOdd"></span></p>
-                <p>Bet Type: <span id="betTypeDisplay"></span></p>
-                <form id="betForm">
-                    <div class="form-group">
-                        <label>Amount (K)</label>
-                        <input type="number" id="betAmount" class="form-control" required min="100">
-                    </div>
-                </form>
-                <div id="taxInfo" style="margin-top: 10px; font-size: 12px; color: #f39c12;"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary close-modal">Cancel</button>
-                <button class="btn btn-success" id="confirmBet">Confirm Bet</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="support-chat-popup">
-        <div class="support-icon" id="supportIcon">
-            <i class="fas fa-comments"></i>
-        </div>
-        <div class="support-options" id="supportOptions">
-            <a href="#" id="telegramLink" target="_blank"><i class="fab fa-telegram-plane tg-color"></i> Telegram Chat</a>
-            <a href="#" id="viberLink" target="_blank"><i class="fab fa-viber vb-color"></i> Viber Chat</a>
-        </div>
-    </div>
-
-    <div id="adminAgentApp" class="container" style="display: none;">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h3>MMBET789 Panel</h3>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-                <li id="userManagementLink"><a href="#" data-tab="userManagement"><i class="fas fa-users"></i> <span>User Management</span></a></li>
-                <li id="oddManagementLink"><a href="#" data-tab="oddManagement"><i class="fas fa-list-alt"></i> <span>Odd Management</span></a></li>
-                <li id="agentManagementLink"><a href="#" data-tab="agentManagement"><i class="fas fa-user-tie"></i> <span>Agent Management</span></a></li>
-                <li><a href="#" data-tab="bettingLogs"><i class="fas fa-history"></i> <span>Betting Logs</span></a></li>
-                <li id="financialLogsLink"><a href="#" data-tab="financialLogsAdmin"><i class="fas fa-money-check"></i> <span>Financial Logs</span></a></li>
-                <li><a href="#" data-tab="reports"><i class="fas fa-chart-bar"></i> <span>Reports</span></a></li>
-                <li id="settingsLink"><a href="#" data-tab="settings"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
-                <li><a href="#" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        <div class="container">
+            <ul class="nav nav-tabs" id="mainTabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-target="accInfo">Account Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-target="accHistory">Account Statement</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-target="odds">Live Odds</a>
+                </li>
             </ul>
-        </div>
 
-        <div class="main-content">
-            <div class="header">
-                <div class="header-left">
-                    <h1 id="adminPageTitle">Dashboard</h1>
-                </div>
-                <div class="header-right">
-                    <div class="language-switcher">
-                        <button class="lang-btn active" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="my">MY</button>
-                    </div>
-                    <div class="user-info">
-                        <div class="user-avatar" id="adminUserAvatar">A</div>
-                        <div>
-                            <div id="adminUserName">Admin</div>
-                            <div style="font-size: 12px; color: #777;" id="adminUserRole">Administrator</div>
+            <div class="tab-content">
+                <!-- Account Information Section -->
+                <div id="accInfo" class="content-section active">
+                    <h2>Account Information</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h5>Personal Details</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Username:</strong> <span id="accUsername"></span></p>
+                                    <p><strong>Account Type:</strong> <span id="accType">Member</span></p>
+                                    <p><strong>Currency:</strong> USD</p>
+                                    <p><strong>Status:</strong> Active</p>
+                                    <p><strong>Registration Date:</strong> <span id="regDate">2023-05-15</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h5>Balance Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Current Balance:</strong> <span id="currentBalance">$0.00</span></p>
+                                    <p><strong>Available Balance:</strong> <span id="availableBalance">$0.00</span></p>
+                                    <p><strong>Credit Limit:</strong> $5,000.00</p>
+                                    <p><strong>Outstanding Bets:</strong> <span id="outstandingBets">$0.00</span></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="content">
-                <div id="dashboard" class="tab-content active">
-                    <div class="stats-container">
-                        <div class="stat-card">
-                            <div class="stat-icon bg-primary"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="stat-info"><h3 id="totalBetsAdmin">K0.00</h3><p>Total Bets Today</p></div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon bg-success"><i class="fas fa-chart-line"></i></div>
-                            <div class="stat-info"><h3 id="winAmountAdmin">K0.00</h3><p>Win Amount</p></div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon bg-danger"><i class="fas fa-chart-bar"></i></div>
-                            <div class="stat-info"><h3 id="loseAmountAdmin">K0.00</h3><p>Lose Amount</p></div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon bg-warning"><i class="fas fa-users"></i></div>
-                            <div class="stat-info"><h3 id="activeAgentsAdmin">0</h3><p>Active Agents</p></div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Recent Activities</h3><button class="btn btn-primary">View All</button></div>
-                        <div class="card-body">
-                            <table>
-                                <thead><tr><th>Time</th><th>Agent/User</th><th>Activity</th><th>Amount (K)</th><th>Status</th></tr></thead>
-                                <tbody id="recentActivitiesAdmin"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Revenue Overview</h3></div>
-                        <div class="card-body"><div class="chart-container"><canvas id="revenueChart"></canvas></div></div>
-                    </div>
-                </div>
-
-                <div id="userManagement" class="tab-content">
+                    
                     <div class="card">
                         <div class="card-header">
-                            <h3>User Management</h3>
-                            <button class="btn btn-primary" id="addUserBtn">Add New User</button>
+                            <h5>Recent Activity</h5>
                         </div>
                         <div class="card-body">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>User ID</th><th>Username</th><th>Balance (K)</th><th>Status</th><th>Agent</th><th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usersTableAdmin"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="oddManagement" class="tab-content">
-                    <div class="card">
-                        <div class="card-header"><h3>Odd Management</h3><button class="btn btn-primary" id="addOddBtn">Add New Odd</button></div>
-                        <div class="card-body">
-                            <div class="tabs">
-                                <div class="tab active" data-subtab="singleOdd">Single Odd</div>
-                                <div class="tab" data-subtab="mixParlay">Mix Parlay</div>
-                                <div class="tab" data-subtab="autoOdd">Auto Odd</div>
-                            </div>
-                            <div id="singleOdd" class="tab-content active">
+                            <div class="table-container">
                                 <table>
-                                    <thead><tr><th>Match</th><th>Home/Away</th><th>Over/Under</th><th>Actions</th></tr></thead>
-                                    <tbody id="oddsTableAdmin"></tbody>
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentActivityTable">
+                                        <!-- Recent activity will be populated by JavaScript -->
+                                    </tbody>
                                 </table>
                             </div>
-                            <div id="mixParlay" class="tab-content"><p>Mix Parlay odds management interface</p></div>
-                            <div id="autoOdd" class="tab-content"><p>Auto odd assignment and customization interface</p></div>
                         </div>
                     </div>
                 </div>
 
-                <div id="agentManagement" class="tab-content">
-                    <div class="card">
-                        <div class="card-header"><h3>Agent Management</h3><button class="btn btn-primary" id="addAgentBtn">Add New Agent</button></div>
-                        <div class="card-body">
-                            <table>
-                                <thead><tr><th>Agent ID</th><th>Name</th><th>Username</th><th>Commission %</th><th>Balance (K)</th><th>Status</th><th>Actions</th></tr></thead>
-                                <tbody id="agentsTableAdmin"></tbody>
-                            </table>
+                <!-- Account Statement Section -->
+                <div id="accHistory" class="content-section">
+                    <h2>Account Statement</h2>
+                    
+                    <div class="statement-filters">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="statementDateFrom" class="form-label">From Date</label>
+                                <input type="date" class="form-control" id="statementDateFrom" value="2023-10-01">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="statementDateTo" class="form-label">To Date</label>
+                                <input type="date" class="form-control" id="statementDateTo" value="2023-10-15">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="statementType" class="form-label">Transaction Type</label>
+                                <select class="form-control" id="statementType">
+                                    <option value="all">All Transactions</option>
+                                    <option value="deposit">Deposits</option>
+                                    <option value="withdrawal">Withdrawals</option>
+                                    <option value="bet">Bets</option>
+                                    <option value="win">Winnings</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button class="btn btn-primary w-100" id="searchStatement">Search</button>
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="statement-table">
+                            <thead>
+                                <tr>
+                                    <th>Date/Time</th>
+                                    <th>Transaction ID</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="statementTable">
+                                <!-- Statement data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div id="bettingLogs" class="tab-content">
-                    <div class="card">
-                        <div class="card-header"><h3>Betting Logs</h3><div><button class="btn btn-success" id="refreshBetsBtn">Refresh</button></div></div>
-                        <div class="card-body">
-                            <table>
-                                <thead><tr><th>Bet ID</th><th>User</th><th>Match</th><th>Bet Type</th><th>Odd</th><th>Amount (K)</th><th>Tax (K)</th><th>Status</th><th>Actions</th></tr></thead>
-                                <tbody id="bettingLogsTableAdmin"></tbody>
-                            </table>
+                <!-- Live Odds Section -->
+                <div id="odds" class="content-section">
+                    <h2>Live Betting Odds</h2>
+                    
+                    <!-- Betting Actions -->
+                    <div class="betting-actions">
+                        <button class="betting-action-btn active" data-bet-type="single">Single Bet</button>
+                        <button class="betting-action-btn" data-bet-type="parlay">Parlay Bet</button>
+                        <button class="betting-action-btn" data-bet-type="ht">HT Bet</button>
+                        <button class="betting-action-btn" data-bet-type="ft">FT Bet</button>
+                    </div>
+                    
+                    <!-- Navigation Controls -->
+                    <div class="controls-container">
+                        <!-- First Row: Live/Today/Early/Select League/Search -->
+                        <div class="controls-row">
+                            <button class="tab-button active" data-odds-type="live">Live</button>
+                            <button class="tab-button" data-odds-type="today">Today</button>
+                            <button class="tab-button" data-odds-type="early">Early</button>
+                            <button class="tab-button" id="selectLeagueBtn">Select League</button>
+                            <div class="search-container">
+                                <input type="text" class="search-input" placeholder="Search Team">
+                                <button class="search-button">Search</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Second Row: Filters -->
+                        <div class="controls-row">
+                            <div class="control-item">
+                                <span class="control-label">Time:</span>
+                                <select class="control-select" id="timeFilter">
+                                    <option value="upcoming">Upcoming</option>
+                                    <option value="top">Top</option>
+                                    <option value="before11">Before 11:00PM</option>
+                                    <option value="after11">After 11:00PM</option>
+                                    <option value="all">All</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-item">
+                                <span class="control-label">Market:</span>
+                                <select class="control-select" id="marketFilter">
+                                    <option value="all">All Market</option>
+                                    <option value="main">Main Market</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-item">
+                                <span class="control-label">View:</span>
+                                <select class="control-select" id="viewFilter">
+                                    <option value="single-new">Single (New)</option>
+                                    <option value="single-old">Single (Old)</option>
+                                    <option value="double" selected>Double</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-item">
+                                <span class="control-label">Sort:</span>
+                                <select class="control-select" id="sortFilter">
+                                    <option value="normal">Normal Sorting</option>
+                                    <option value="time">Sort by time</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-item">
+                                <span class="control-label">Odds:</span>
+                                <select class="control-select" id="oddsType">
+                                    <option value="euro">EURO</option>
+                                    <option value="malay" selected>Malay</option>
+                                    <option value="hk">HK</option>
+                                    <option value="indo">Indo</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div id="financialLogsAdmin" class="tab-content">
-                    <div class="card">
-                        <div class="card-header"><h3>Financial Logs (Deposit & Withdrawal Requests)</h3></div>
-                        <div class="card-body">
-                            <table>
-                                <thead><tr><th>ID</th><th>User</th><th>Type</th><th>Amount (K)</th><th>Method</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
-                                <tbody id="financialLogsTableAdmin"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="reports" class="tab-content">
-                    <div class="card">
-                        <div class="card-header"><h3>Reports & Analytics</h3><div><button class="btn btn-primary">Generate Report</button></div></div>
-                        <div class="card-body">
-                            <div class="tabs">
-                                <div class="tab active" data-subtab="dailyReport">Daily Report</div>
-                                <div class="tab" data-subtab="agentReport">Agent Report</div>
-                            </div>
-                            <div id="dailyReport" class="tab-content active"><div class="chart-container"><canvas id="dailyReportChart"></canvas></div></div>
-                            <div id="agentReport" class="tab-content"><p>Agent performance and commission report</p></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="settings" class="tab-content">
-                    <div class="card">
-                        <div class="card-header"><h3>System Settings</h3></div>
-                        <div class="card-body">
-                            <div class="tabs">
-                                <div class="tab active" data-subtab="generalSettings">General</div>
-                                <div class="tab" data-subtab="supportSettings">Support Chat</div>
-                                <div class="tab" data-subtab="taxSettings">Tax Settings</div>
-                            </div>
-
-                            <div id="generalSettings" class="tab-content active">
-                                <div class="form-group"><label>Default Currency</label><input type="text" class="form-control" value="MMK (K)" disabled></div>
-                                <button class="btn btn-success">Save Settings</button>
-                            </div>
-
-                            <div id="supportSettings" class="tab-content">
-                                <div class="form-group"><label>Telegram Direct Chat Link</label><input type="url" id="telegramUrlInput" class="form-control" value="https://t.me/youradminid"></div>
-                                <div class="form-group"><label>Viber Direct Chat Link</label><input type="url" id="viberUrlInput" class="form-control" value="viber://chat?number=+959xxxxxxxxx"></div>
-                                <button class="btn btn-success" id="saveSupportSettings">Save Support Settings</button>
-                            </div>
-
-                            <div id="taxSettings" class="tab-content">
-                                <div class="form-group">
-                                    <label>Tax Rate (%)</label>
-                                    <input type="number" id="taxRateInput" class="form-control" value="5" min="0" max="100">
-                                    <small class="form-text text-muted">Tax rate applied to all winning bets (5% = 10000 kyat တွင် 500 kyat tax)</small>
-                                </div>
-                                <button class="btn btn-success" id="saveTaxSettings">Save Tax Settings</button>
-                            </div>
+                    
+                    <!-- Live Odds Content -->
+                    <div id="liveOddsContent">
+                        <!-- Selected Leagues will be displayed here -->
+                        <div class="no-matches" id="noMatchesMessage">
+                            No matches available. Please select leagues to view matches.
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal" id="userActionModal">
-        <div class="modal-content">
-            <div class="modal-header"><h3 id="userActionTitle">Add/Edit User</h3><button class="btn btn-danger close-modal">&times;</button></div>
-            <div class="modal-body">
-                <form id="userActionForm">
-                    <input type="hidden" id="currentUserId">
-                    <div class="form-row">
-                        <div class="form-group"><label>Username</label><input type="text" id="userActionUsername" class="form-control" required></div>
-                        <div class="form-group"><label>Password (Leave blank to not change)</label><input type="password" id="userActionPassword" class="form-control"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Balance (K)</label><input type="number" id="userActionBalance" class="form-control" value="0" step="0.01"></div>
-                        <div class="form-group"><label>Agent</label><select id="userActionAgent" class="form-control"></select></div>
-                    </div>
-                    <div id="moneyActionGroup" style="display: none;">
-                        <h4 style="margin-top: 15px;">Add/Subtract Money (K)</h4>
-                        <div class="form-row">
-                            <div class="form-group"><label>Amount</label><input type="number" id="moneyAmount" class="form-control" value="0" step="1"></div>
-                            <div class="form-group"><label>Action</label><select id="moneyAction" class="form-control"><option value="Add">Add Money (+)</option><option value="Subtract">Subtract Money (-)</option></select></div>
+        <!-- League Selection Modal -->
+        <div class="modal-overlay" id="leagueModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Select Football Leagues</h3>
+                    <button class="close-modal" id="closeLeagueModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="league-category">
+                        <h4>FOOTBALL LEAGUES</h4>
+                        <div class="league-list" id="footballLeagues">
+                            <!-- Football leagues will be populated by JavaScript -->
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="control-button" id="applyLeagues">Apply Selection</button>
+                    <button class="control-button" style="background-color: #6c757d;" id="cancelLeagues">Cancel</button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary close-modal">Cancel</button>
-                <button class="btn btn-primary" id="saveUserActionButton">Save</button>
+        </div>
+
+        <!-- Bet Slip -->
+        <div class="bet-slip" id="betSlip">
+            <div class="bet-slip-header">
+                <span>Bet Slip <span id="betTypeIndicator" class="bet-type-indicator single-bet">Single</span></span>
+                <button id="closeBetSlip" style="background: none; border: none; color: white; cursor: pointer;">×</button>
+            </div>
+            <div class="bet-slip-content" id="betSlipContent">
+                <!-- Bet items will be added here dynamically -->
+                <p id="emptyBetSlip">No bets added yet</p>
+            </div>
+            <div class="bet-slip-footer">
+                <div class="bet-summary" id="betSummary" style="display: none;">
+                    <div class="bet-summary-row">
+                        <span>Total Odds:</span>
+                        <span id="totalOdds" class="total-odds">1.00</span>
+                    </div>
+                    <div class="bet-summary-row">
+                        <span>Stake:</span>
+                        <span>$<span id="totalStake">0.00</span></span>
+                    </div>
+                    <div class="bet-summary-row">
+                        <span>Potential Win:</span>
+                        <span id="potentialWin" class="potential-win">$0.00</span>
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 10px;">
+                    <button class="control-button" id="placeBet">Place Bet</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Chat -->
+        <div class="support-chat-popup">
+            <div class="support-icon" id="supportIcon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="support-options" id="supportOptions">
+                <a href="#" id="telegramLink" target="_blank"><i class="fab fa-telegram-plane tg-color"></i> Telegram Chat</a>
+                <a href="#" id="viberLink" target="_blank"><i class="fab fa-viber vb-color"></i> Viber Chat</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="container">
+                <p>© 2023 i789 Sport Portal. All rights reserved.</p>
+                <p>This is a demonstration page only.</p>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="oddActionModal">
-        <div class="modal-content">
-            <div class="modal-header"><h3>Add New Odd</h3><button class="btn btn-danger close-modal">&times;</button></div>
-            <div class="modal-body">
-                <form id="oddActionForm">
-                    <div class="form-group"><label>Match</label><input type="text" id="oddMatch" class="form-control" required></div>
-                    <div class="form-group"><label>Home Team Odd</label><input type="number" id="oddHome" class="form-control" step="0.01" required></div>
-                    <div class="form-group"><label>Away Team Odd</label><input type="number" id="oddAway" class="form-control" step="0.01" required></div>
-                    <div class="form-group"><label>Over Odd (e.g., Over 2.5)</label><input type="number" id="oddOver" class="form-control" step="0.01" required></div>
-                    <div class="form-group"><label>Under Odd (e.g., Under 2.5)</label><input type="number" id="oddUnder" class="form-control" step="0.01" required></div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary close-modal">Cancel</button>
-                <button class="btn btn-primary" id="saveOddBtn">Save Odd</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="agentActionModal">
-        <div class="modal-content">
-            <div class="modal-header"><h3>Add New Agent</h3><button class="btn btn-danger close-modal">&times;</button></div>
-            <div class="modal-body">
-                <form id="agentActionForm">
-                    <div class="form-group"><label>Agent Name</label><input type="text" id="agentName" class="form-control" required></div>
-                    <div class="form-group"><label>Username</label><input type="text" id="agentUsername" class="form-control" required></div>
-                    <div class="form-group"><label>Password</label><input type="password" id="agentPassword" class="form-control" required></div>
-                    <div class="form-group"><label>Commission Rate (%)</label><input type="number" id="agentCommission" class="form-control" min="1" max="20" value="5"></div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary close-modal">Cancel</button>
-                <button class="btn btn-primary" id="saveAgentBtnAdmin">Save Agent</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="financialActionModal">
-        <div class="modal-content" style="max-width: 450px;">
-            <div class="modal-header"><h3>Process Financial Request</h3><button class="btn btn-danger close-modal">&times;</button></div>
-            <div class="modal-body">
-                <p>Request ID: <span id="reqIdDisplay"></span></p>
-                <p>User: <span id="reqUserDisplay"></span></p>
-                <p>Type: <span id="reqTypeDisplay"></span></p>
-                <p>Amount: <span id="reqAmountDisplay" class="danger-text"></span></p>
-                <p>Method: <span id="reqMethodDisplay"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger close-modal">Cancel</button>
-                <button class="btn btn-warning" id="declineFinancialReq">Decline</button>
-                <button class="btn btn-success" id="approveFinancialReq">Approve</button>
-            </div>
-        </div>
-    </div>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ====================================================================
-        // GLOBAL DATA STORE & HELPER FUNCTIONS
-        // ====================================================================
-
-        const CURRENCY_SYMBOL = 'K'; // MMK Kyat Symbol
-        
-        let globalData = {
-            loggedInUser: null,
-            isAdmin: false,
-            isAgent: false,
-            taxRate: 5, // 5% tax rate (10000 kyat = 500 kyat tax)
-            settings: {
-                telegramUrl: 'https://t.me/youradminid',
-                viberUrl: 'viber://chat?number=+959xxxxxxxxx'
+        // Data for different odds formats
+        const oddsData = {
+            euro: {
+                "Manchester City vs Arsenal": { "1": "2.10", "X": "3.25", "2": "3.50", "1X": "1.40", "12": "1.25" },
+                "Liverpool vs Chelsea": { "1": "2.30", "X": "3.10", "2": "3.20", "1X": "1.45", "12": "1.30" },
+                "Real Madrid vs Barcelona": { "1": "2.05", "X": "3.40", "2": "3.60", "1X": "1.35", "12": "1.20" },
+                "Bayern Munich vs Borussia Dortmund": { "1": "1.85", "X": "3.60", "2": "4.20", "1X": "1.25", "12": "1.15" },
+                "PSG vs Marseille": { "1": "1.75", "X": "3.50", "2": "4.50", "1X": "1.20", "12": "1.10" }
             },
-            users: [
-                { id: 'ADM001', username: 'admin', password: 'admin', role: 'admin', balance: 99999999, status: 'active', isFirstLogin: false },
-                { id: 'AGT001', username: 'agent1', password: 'agent1', role: 'agent', commission: 5, balance: 5000000, status: 'active', isFirstLogin: false },
-                { id: 'USR001', username: 'user1', password: 'user1', role: 'user', agentId: 'AGT001', balance: 50000.00, status: 'active', isFirstLogin: true },
-                { id: 'USR002', username: 'user2', password: 'newuserpass', role: 'user', agentId: 'AGT001', balance: 1000.00, status: 'active', isFirstLogin: false },
-                { id: 'USR003', username: 'banneduser', password: 'bannedpass', role: 'user', agentId: 'AGT001', balance: 0.00, status: 'banned', isFirstLogin: false }
+            malay: {
+                "Manchester City vs Arsenal": { "1": "0.48", "X": "0.31", "2": "0.29", "1X": "0.71", "12": "0.80" },
+                "Liverpool vs Chelsea": { "1": "0.43", "X": "0.32", "2": "0.31", "1X": "0.69", "12": "0.77" },
+                "Real Madrid vs Barcelona": { "1": "0.49", "X": "0.29", "2": "0.28", "1X": "0.74", "12": "0.83" },
+                "Bayern Munich vs Borussia Dortmund": { "1": "0.54", "X": "0.28", "2": "0.24", "1X": "0.80", "12": "0.87" },
+                "PSG vs Marseille": { "1": "0.57", "X": "0.29", "2": "0.22", "1X": "0.83", "12": "0.91" }
+            },
+            hk: {
+                "Manchester City vs Arsenal": { "1": "1.10", "X": "2.25", "2": "2.50", "1X": "0.40", "12": "0.25" },
+                "Liverpool vs Chelsea": { "1": "1.30", "X": "2.10", "2": "2.20", "1X": "0.45", "12": "0.30" },
+                "Real Madrid vs Barcelona": { "1": "1.05", "X": "2.40", "2": "2.60", "1X": "0.35", "12": "0.20" },
+                "Bayern Munich vs Borussia Dortmund": { "1": "0.85", "X": "2.60", "2": "3.20", "1X": "0.25", "12": "0.15" },
+                "PSG vs Marseille": { "1": "0.75", "X": "2.50", "2": "3.50", "1X": "0.20", "12": "0.10" }
+            },
+            indo: {
+                "Manchester City vs Arsenal": { "1": "1.10", "X": "2.25", "2": "2.50", "1X": "0.40", "12": "0.25" },
+                "Liverpool vs Chelsea": { "1": "1.30", "X": "2.10", "2": "2.20", "1X": "0.45", "12": "0.30" },
+                "Real Madrid vs Barcelona": { "1": "1.05", "X": "2.40", "2": "2.60", "1X": "0.35", "12": "0.20" },
+                "Bayern Munich vs Borussia Dortmund": { "1": "0.85", "X": "2.60", "2": "3.20", "1X": "0.25", "12": "0.15" },
+                "PSG vs Marseille": { "1": "0.75", "X": "2.50", "2": "3.50", "1X": "0.20", "12": "0.10" }
+            }
+        };
+
+        // Football leagues data
+        const footballLeaguesData = [
+            { id: "premier-league", name: "Premier League", selected: true },
+            { id: "laliga", name: "Spain LaLiga", selected: true },
+            { id: "serie-a", name: "Italy Serie A", selected: true },
+            { id: "bundesliga", name: "Germany Bundesliga", selected: true },
+            { id: "ligue-1", name: "France Ligue 1", selected: true }
+        ];
+
+        // Match data by league
+        const matchesByLeague = {
+            "premier-league": [
+                { id: "m1", name: "Manchester City vs Arsenal", time: "Live - 35'", sport: "football" },
+                { id: "m2", name: "Liverpool vs Chelsea", time: "Live - 22'", sport: "football" }
             ],
-            agents: [
-                { id: 'AGT001', name: 'Agent John', username: 'agent1', commission: 5, balance: 5000000, status: 'active' },
+            "laliga": [
+                { id: "m3", name: "Real Madrid vs Barcelona", time: "Live - 15'", sport: "football" }
             ],
-            odds: [
-                { id: 'ODD001', match: 'Man Utd vs Liverpool', homeOdd: 2.10, awayOdd: 3.00, overOdd: 1.85, underOdd: 2.05, type: 'single' },
-                { id: 'ODD002', match: 'Barcelona vs Real Madrid', homeOdd: 2.50, awayOdd: 2.80, overOdd: 1.70, underOdd: 2.20, type: 'single' }
+            "serie-a": [
+                { id: "m4", name: "Juventus vs AC Milan", time: "Live - 28'", sport: "football" }
             ],
-            bets: [
-                { id: 'BET001', userId: 'USR001', match: 'Man Utd vs Liverpool', betType: 'Home Win', odd: 2.10, amount: 1000, tax: 50, status: 'Win', date: new Date().toLocaleString() },
-                { id: 'BET002', userId: 'USR002', match: 'Barcelona vs Real Madrid', betType: 'Over 2.5', odd: 1.70, amount: 500, tax: 25, status: 'Pending', date: new Date().toLocaleString() }
+            "bundesliga": [
+                { id: "m5", name: "Bayern Munich vs Borussia Dortmund", time: "Live - 42'", sport: "football" }
             ],
-            financialLogs: [
-                { id: 'FIN001', userId: 'USR001', type: 'Deposit', amount: 50000, method: 'KBZ Pay', status: 'Approved', date: new Date().toLocaleString() },
-                { id: 'FIN002', userId: 'USR002', type: 'Withdrawal', amount: 500, method: 'Wave Money', status: 'Pending', date: new Date().toLocaleString() }
+            "ligue-1": [
+                { id: "m6", name: "PSG vs Marseille", time: "Live - 19'", sport: "football" }
             ]
         };
 
-        const texts = {
-            en: {
-                dashboard: "Dashboard", userManagement: "User Management", oddManagement: "Odd Management", agentManagement: "Agent Management", bettingLogs: "Betting Logs", reports: "Reports", settings: "Settings", logout: "Logout", financialLogsAdmin: "Financial Logs"
-            },
-            my: {
-                dashboard: "ပင်မစာမျက်နှာ", userManagement: "အသုံးပြုသူများ စီမံခန့်ခွဲမှု", oddManagement: "အချိုးအတာများ စီမံခန့်ခွဲမှု", agentManagement: "ကိုယ်စားလှယ်များ စီမံခန့်ခွဲမှု", bettingLogs: "ကြေးစားမှတ်တမ်းများ", reports: "အစီရင်ခံစာများ", settings: "ဆက်တင်များ", logout: "ထွက်မည်", financialLogsAdmin: "ငွေကြေးမှတ်တမ်းများ"
-            }
-        };
-        let currentLang = 'en';
-
-        // Helper to format currency
-        function formatMMK(amount) {
-            return CURRENCY_SYMBOL + parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        // Helper to calculate tax
-        function calculateTax(amount) {
-            return (amount * globalData.taxRate) / 100;
-        }
-
-        // Helper to populate Agent Select
-        function populateAgentSelect(selectId) {
-            const select = document.getElementById(selectId);
-            select.innerHTML = '<option value="">(None)</option>';
-            globalData.agents.forEach(agent => {
-                const option = document.createElement('option');
-                option.value = agent.id;
-                option.textContent = `${agent.name} (${agent.id})`;
-                select.appendChild(option);
-            });
-        }
-
-        // ====================================================================
-        // FRONTEND (USER) LOGIC
-        // ====================================================================
-
-        const userFrontendApp = document.getElementById('userFrontendApp');
-        const frontendLogoutBtn = document.getElementById('frontendLogoutBtn');
-        const frontendContentArea = document.getElementById('frontendContentArea');
-        const mainNavBar = document.getElementById('mainNavBar');
-        const supportIcon = document.getElementById('supportIcon');
-        const supportOptions = document.getElementById('supportOptions');
-        const telegramLink = document.getElementById('telegramLink');
-        const viberLink = document.getElementById('viberLink');
-
-        function initializeFrontend() {
-            // Update User Info
-            const user = globalData.loggedInUser;
-            document.getElementById('frontendUsernameDisplay').textContent = user.username;
-            document.getElementById('frontendUserBalanceDisplay').textContent = formatMMK(user.balance);
-
-            // Set Support Links
-            telegramLink.href = globalData.settings.telegramUrl;
-            viberLink.href = globalData.settings.viberUrl;
-
-            // Show default content
-            showFrontendContent('live-bet');
-            
-            // Re-populate logs in case of updates
-            populateUserBetLogs();
-            populateUserFinancialLogs();
-        }
-
-        // Navigation
-        mainNavBar.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                mainNavBar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                showFrontendContent(this.getAttribute('data-action'));
-            });
-        });
-
-        function showFrontendContent(contentId) {
-            frontendContentArea.querySelectorAll('.frontend-sub-content').forEach(content => {
-                content.style.display = 'none';
-            });
-            document.getElementById(contentId + '-content').style.display = 'block';
-
-            if (contentId === 'bet-logs') populateUserBetLogs();
-            if (contentId === 'financial-logs') populateUserFinancialLogs();
-        }
-        
-        // Bet Slip Logic (Simulated)
-        let currentBet = {};
-
-        window.placeBet = function(option, odd, betType) {
-            currentBet.matchOption = option;
-            currentBet.odd = odd;
-            currentBet.betType = betType;
-
-            document.getElementById('betOption').textContent = option;
-            document.getElementById('betOdd').textContent = odd;
-            document.getElementById('betTypeDisplay').textContent = betType;
-            
-            // Update tax info
-            const betAmountInput = document.getElementById('betAmount');
-            const taxInfo = document.getElementById('taxInfo');
-            
-            // Add event listener to update tax info when amount changes
-            betAmountInput.oninput = function() {
-                const amount = parseFloat(this.value) || 0;
-                const tax = calculateTax(amount * odd);
-                taxInfo.textContent = `If Win: ${formatMMK(amount * odd)} - Tax ${formatMMK(tax)} = ${formatMMK((amount * odd) - tax)}`;
-            };
-            
-            // Trigger initial calculation
-            betAmountInput.oninput();
-            
-            document.getElementById('betSlipModal').style.display = 'flex';
+        // User data
+        const users = {
+            "user1": { username: "user1", password: "user1", balance: 1250.75, role: "user" },
+            "admin": { username: "admin", password: "admin", balance: 5000.00, role: "admin" }
         };
 
-        document.getElementById('confirmBet').addEventListener('click', function() {
-            const amount = parseFloat(document.getElementById('betAmount').value);
-            const user = globalData.loggedInUser;
+        // Current selected leagues
+        let selectedLeagues = ["premier-league", "laliga", "serie-a", "bundesliga", "ligue-1"];
 
-            if (isNaN(amount) || amount <= 0) {
-                alert('Invalid bet amount.');
-                return;
-            }
+        // Current odds format
+        let currentOddsFormat = "malay";
 
-            if (user.balance < amount) {
-                alert('Insufficient balance. Your balance is ' + formatMMK(user.balance));
-                return;
-            }
+        // Bet slip data
+        let betSelections = [];
+        let totalStake = 0;
 
-            // Calculate tax for potential win
-            const potentialWin = amount * currentBet.odd;
-            const tax = calculateTax(potentialWin);
+        // Current user
+        let currentUser = null;
 
-            // Simulate Bet Placement
-            user.balance -= amount;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize login functionality
+            initializeLogin();
             
-            const newBet = {
-                id: 'BET' + (globalData.bets.length + 1).toString().padStart(3, '0'),
-                userId: user.id,
-                match: currentBet.matchOption,
-                betType: currentBet.betType,
-                odd: currentBet.odd,
-                amount: amount,
-                tax: tax,
-                status: 'Pending',
-                date: new Date().toLocaleString()
-            };
-            globalData.bets.push(newBet);
+            // Initialize support chat
+            initializeSupportChat();
             
-            document.getElementById('frontendUserBalanceDisplay').textContent = formatMMK(user.balance);
-            document.getElementById('betSlipModal').style.display = 'none';
-            alert(`Bet Placed Successfully! Amount: ${formatMMK(amount)} on ${currentBet.matchOption}`);
-            
-            // Update Admin view
-            if (globalData.isAdmin) populateAdminDashboard();
-            if (globalData.isAdmin || globalData.isAgent) populateBettingLogsTable();
-            populateUserBetLogs();
+            // Initialize betting functionality
+            initializeBettingSystem();
         });
 
-        // User Bet Logs Population
-        function populateUserBetLogs() {
-            const user = globalData.loggedInUser;
-            const table = document.getElementById('userBetLogsTable');
-            table.innerHTML = '';
+        function initializeLogin() {
+            const loginForm = document.getElementById('loginForm');
+            const loginModal = document.getElementById('loginModal');
+            const mainApp = document.getElementById('mainApp');
+            const logoutBtn = document.getElementById('logoutBtn');
             
-            const userBets = globalData.bets.filter(b => b.userId === user.id).reverse();
+            // Show login modal initially
+            loginModal.style.display = 'flex';
             
-            userBets.forEach(bet => {
-                const statusColor = bet.status === 'Win' ? 'var(--success)' : bet.status === 'Lose' ? 'var(--danger)' : 'var(--warning)';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td style="padding: 10px;">${bet.id}</td>
-                    <td style="padding: 10px;">${bet.match}</td>
-                    <td style="padding: 10px;">${bet.betType} @ ${bet.odd}</td>
-                    <td style="padding: 10px;">${formatMMK(bet.amount)}</td>
-                    <td style="padding: 10px; color: ${statusColor};">${bet.status}</td>
-                `;
-                table.appendChild(row);
-            });
-        }
-        
-        // User Financial Logs Population
-        function populateUserFinancialLogs() {
-            const user = globalData.loggedInUser;
-            const table = document.getElementById('userFinancialLogsTable');
-            table.innerHTML = '';
-
-            const userLogs = globalData.financialLogs.filter(log => log.userId === user.id).reverse();
-
-            userLogs.forEach(log => {
-                const statusColor = log.status === 'Approved' ? 'var(--success)' : log.status === 'Pending' ? 'var(--warning)' : 'var(--danger)';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td style="padding: 10px;">${log.date.split(',')[0]}</td>
-                    <td style="padding: 10px;">${log.type}</td>
-                    <td style="padding: 10px;">${formatMMK(log.amount)}</td>
-                    <td style="padding: 10px; color: ${statusColor};">${log.status}</td>
-                `;
-                table.appendChild(row);
-            });
-        }
-
-        // Deposit/Withdrawal Modal Logic
-        let currentFinancialType = '';
-
-        window.openDepositWithdrawModal = function(type) {
-            currentFinancialType = type;
-            document.getElementById('financialModalTitle').textContent = type + (type === 'Deposit' ? ' (ငွေသွင်းမည်)' : ' (ငွေထုတ်မည်)');
-            document.getElementById('financialModal').style.display = 'flex';
-        }
-
-        document.getElementById('submitFinancial').addEventListener('click', function() {
-            const amount = parseFloat(document.getElementById('financialAmount').value);
-            const method = document.querySelector('#financialForm select').value;
-            const user = globalData.loggedInUser;
-
-            if (isNaN(amount) || amount < 1000 || !method) {
-                alert('Please enter a valid amount (Min K1000) and select a method.');
-                return;
-            }
-
-            if (currentFinancialType === 'Withdrawal' && user.balance < amount) {
-                alert('Insufficient balance for withdrawal.');
-                return;
-            }
-
-            // Simulate Request Submission
-            const newLog = {
-                id: 'FIN' + (globalData.financialLogs.length + 1).toString().padStart(3, '0'),
-                userId: user.id,
-                type: currentFinancialType,
-                amount: amount,
-                method: method,
-                status: 'Pending',
-                date: new Date().toLocaleString()
-            };
-            globalData.financialLogs.push(newLog);
-
-            document.getElementById('financialModal').style.display = 'none';
-            alert(`${currentFinancialType} Request submitted! Waiting for Admin/Agent approval.`);
-            
-            // Update Logs
-            populateUserFinancialLogs();
-            if (globalData.isAdmin || globalData.isAgent) populateFinancialLogsTable();
-        });
-
-        // Support Chat Popup Toggle
-        supportIcon.addEventListener('click', function() {
-            const isVisible = supportOptions.style.display === 'flex';
-            supportOptions.style.display = isVisible ? 'none' : 'flex';
-        });
-
-        // ====================================================================
-        // ADMIN/AGENT PANEL LOGIC (From provided code, enhanced with MMK and data store)
-        // ====================================================================
-        
-        const adminAgentApp = document.getElementById('adminAgentApp');
-        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
-        const adminPageTitle = document.getElementById('adminPageTitle');
-        const adminUserAvatar = document.getElementById('adminUserAvatar');
-        const adminUserName = document.getElementById('adminUserName');
-        const adminUserRole = document.getElementById('adminUserRole');
-        const adminSidebarLinks = document.querySelectorAll('#adminAgentApp .sidebar-menu a');
-        const adminTabContents = document.querySelectorAll('#adminAgentApp .tab-content');
-        const adminLangButtons = document.querySelectorAll('#adminAgentApp .lang-btn');
-        const adminModals = document.querySelectorAll('#adminAgentApp .modal');
-        const adminCloseModalButtons = document.querySelectorAll('#adminAgentApp .close-modal');
-
-        function initializeAdminPanel() {
-            const user = globalData.loggedInUser;
-            adminUserAvatar.textContent = user.username.slice(0, 1).toUpperCase();
-            adminUserName.textContent = user.username;
-            adminUserRole.textContent = user.role.toUpperCase();
-
-            // Hide/Show Admin/Agent specific links
-            const adminOnlyLinks = ['agentManagementLink', 'settingsLink', 'oddManagementLink'];
-            if (user.role === 'agent') {
-                adminOnlyLinks.forEach(id => document.getElementById(id).style.display = 'none');
-            } else {
-                adminOnlyLinks.forEach(id => document.getElementById(id).style.display = 'block');
-            }
-
-            // Set current active tab (Dashboard by default)
-            adminSidebarLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-tab="dashboard"]').classList.add('active');
-            adminTabContents.forEach(tab => tab.classList.remove('active'));
-            document.getElementById('dashboard').classList.add('active');
-            adminPageTitle.textContent = texts[currentLang].dashboard;
-
-            // Populate all data tables
-            populateAdminDashboard();
-            populateUsersTable();
-            populateAgentsTable();
-            populateOddsTable();
-            populateBettingLogsTable();
-            populateFinancialLogsTable();
-            
-            // Initialize tax settings
-            document.getElementById('taxRateInput').value = globalData.taxRate;
-        }
-        
-        // Admin Navigation
-        adminSidebarLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                adminSidebarLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                adminTabContents.forEach(tab => tab.classList.remove('active'));
                 
-                const tabId = this.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-                adminPageTitle.textContent = texts[currentLang][tabId] || tabId;
-            });
-        });
-
-        // Admin Sub-tab navigation
-        document.querySelectorAll('#adminAgentApp .tabs .tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const parent = this.closest('.card-body');
-                const tabId = this.getAttribute('data-subtab');
-                parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                parent.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-                parent.querySelector(`#${tabId}`).classList.add('active');
-            });
-        });
-
-        // Admin Modal Controls
-        adminCloseModalButtons.forEach(button => {
-            button.addEventListener('click', () => adminModals.forEach(modal => modal.style.display = 'none'));
-        });
-
-        // Admin Dashboard Population
-        function populateAdminDashboard() {
-            const totalBets = globalData.bets.reduce((sum, bet) => sum + bet.amount, 0);
-            const winAmount = globalData.bets.filter(b => b.status === 'Win').reduce((sum, bet) => sum + (bet.amount * bet.odd), 0);
-            const loseAmount = globalData.bets.filter(b => b.status === 'Lose').reduce((sum, bet) => sum + bet.amount, 0);
-            const activeAgents = globalData.agents.filter(a => a.status === 'active').length;
-
-            document.getElementById('totalBetsAdmin').textContent = formatMMK(totalBets);
-            document.getElementById('winAmountAdmin').textContent = formatMMK(winAmount);
-            document.getElementById('loseAmountAdmin').textContent = formatMMK(loseAmount);
-            document.getElementById('activeAgentsAdmin').textContent = activeAgents;
-
-            // Simple Activities (using financial logs + last 4 bets)
-            const recentActivities = [];
-            globalData.financialLogs.slice(-2).reverse().forEach(log => {
-                recentActivities.push({
-                    time: new Date(log.date).toLocaleTimeString(),
-                    user: log.userId,
-                    activity: log.type + ' Request',
-                    amount: log.amount,
-                    status: log.status
-                });
-            });
-            globalData.bets.slice(-2).reverse().forEach(bet => {
-                recentActivities.push({
-                    time: new Date(bet.date).toLocaleTimeString(),
-                    user: bet.userId,
-                    activity: 'Bet Placed - ' + bet.betType,
-                    amount: bet.amount,
-                    status: bet.status
-                });
-            });
-
-            const activitiesTable = document.getElementById('recentActivitiesAdmin');
-            activitiesTable.innerHTML = '';
-            recentActivities.forEach(activity => {
-                const statusClass = activity.status === 'Approved' || activity.status === 'Win' ? 'btn-success' : activity.status === 'Pending' ? 'btn-warning' : 'btn-danger';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${activity.time}</td>
-                    <td>${activity.user}</td>
-                    <td>${activity.activity}</td>
-                    <td>${formatMMK(activity.amount)}</td>
-                    <td><span class="btn ${statusClass} btn-sm">${activity.status}</span></td>
-                `;
-                activitiesTable.appendChild(row);
-            });
-        }
-        
-        // Admin User Management (Enhanced for MMK, Activate/Ban, Password Reset)
-        document.getElementById('addUserBtn').addEventListener('click', function() {
-            openUserActionModal('Add');
-        });
-
-        window.openUserActionModal = function(action, userId = null) {
-            const modal = document.getElementById('userActionModal');
-            const userActionTitle = document.getElementById('userActionTitle');
-            
-            userActionTitle.textContent = action === 'Add' ? 'Add New User' : 'Edit User / Adjust Balance';
-            modal.style.display = 'flex';
-            populateAgentSelect('userActionAgent');
-            document.getElementById('moneyActionGroup').style.display = action === 'Edit' ? 'block' : 'none';
-
-            if (userId) {
-                const user = globalData.users.find(u => u.id === userId);
-                document.getElementById('currentUserId').value = user.id;
-                document.getElementById('userActionUsername').value = user.username;
-                document.getElementById('userActionBalance').value = user.balance.toFixed(2);
-                document.getElementById('userActionAgent').value = user.agentId || '';
-                document.getElementById('userActionPassword').placeholder = 'Leave blank to not change';
-            } else {
-                document.getElementById('currentUserId').value = '';
-                document.getElementById('userActionUsername').value = '';
-                document.getElementById('userActionBalance').value = '0';
-                document.getElementById('userActionAgent').value = '';
-                document.getElementById('userActionPassword').placeholder = 'Set initial password';
-            }
-        }
-        
-        document.getElementById('saveUserActionButton').addEventListener('click', function() {
-            const id = document.getElementById('currentUserId').value;
-            const username = document.getElementById('userActionUsername').value;
-            const newPassword = document.getElementById('userActionPassword').value;
-            let balance = parseFloat(document.getElementById('userActionBalance').value);
-            const agentId = document.getElementById('userActionAgent').value;
-            
-            let user = globalData.users.find(u => u.id === id);
-
-            if (user) {
-                // Edit User
-                user.username = username;
-                user.balance = balance;
-                user.agentId = agentId;
-                if (newPassword) user.password = newPassword;
-
-                // Handle Money Action
-                const moneyAmount = parseFloat(document.getElementById('moneyAmount').value);
-                const moneyAction = document.getElementById('moneyAction').value;
-                if (moneyAmount > 0) {
-                    if (moneyAction === 'Add') user.balance += moneyAmount;
-                    if (moneyAction === 'Subtract') user.balance -= moneyAmount;
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                // Check credentials
+                if (users[username] && users[username].password === password) {
+                    // Login successful
+                    currentUser = users[username];
+                    loginModal.style.display = 'none';
+                    mainApp.classList.remove('hidden');
                     
-                    // Log the admin/agent initiated action
-                    globalData.financialLogs.push({
-                        id: 'FIN' + (globalData.financialLogs.length + 1).toString().padStart(3, '0'),
-                        userId: user.id,
-                        type: moneyAction === 'Add' ? 'Credit' : 'Debit',
-                        amount: moneyAmount,
-                        method: 'Admin/Agent Action',
-                        status: 'Approved',
-                        date: new Date().toLocaleString()
-                    });
-                }
-            } else {
-                // Add User
-                const newId = 'USR' + (globalData.users.filter(u => u.role === 'user').length + 1).toString().padStart(3, '0');
-                globalData.users.push({
-                    id: newId,
-                    username: username,
-                    password: newPassword,
-                    role: 'user',
-                    agentId: agentId,
-                    balance: balance,
-                    status: 'active',
-                    isFirstLogin: true // Force password change
-                });
-            }
-
-            document.getElementById('userActionModal').style.display = 'none';
-            populateUsersTable();
-            populateFinancialLogsTable();
-            alert('User data updated successfully.');
-        });
-        
-        window.toggleUserStatus = function(userId) {
-            const user = globalData.users.find(u => u.id === userId);
-            user.status = user.status === 'active' ? 'banned' : 'active';
-            populateUsersTable();
-            alert(`User ${user.username} is now ${user.status}.`);
-        }
-
-        window.resetUserPassword = function(userId) {
-            const user = globalData.users.find(u => u.id === userId);
-            user.isFirstLogin = true; // Forces first time password change
-            alert(`Password reset for ${user.username}. User must change password on next login.`);
-        }
-
-        function populateUsersTable() {
-            const table = document.getElementById('usersTableAdmin');
-            table.innerHTML = '';
-            
-            globalData.users.filter(u => u.role === 'user').forEach(user => {
-                const statusClass = user.status === 'active' ? 'btn-success' : 'btn-danger';
-                const statusText = user.status === 'active' ? 'Active' : 'Banned';
-                const agent = globalData.agents.find(a => a.id === user.agentId);
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.username}</td>
-                    <td>${formatMMK(user.balance)}</td>
-                    <td><span class="btn ${statusClass} btn-sm">${statusText}</span></td>
-                    <td>${agent ? agent.name : '-'}</td>
-                    <td>
-                        <button class="btn btn-primary btn-sm" onclick="openUserActionModal('Edit', '${user.id}')">Edit/Money</button>
-                        <button class="btn btn-warning btn-sm" onclick="toggleUserStatus('${user.id}')">${user.status === 'active' ? 'Ban' : 'Activate'}</button>
-                        <button class="btn btn-danger btn-sm" onclick="resetUserPassword('${user.id}')">Reset Pass</button>
-                    </td>
-                `;
-                table.appendChild(row);
-            });
-        }
-        
-        // Admin Agents Management
-        document.getElementById('addAgentBtn').addEventListener('click', function() {
-            document.getElementById('agentActionModal').style.display = 'flex';
-        });
-
-        document.getElementById('saveAgentBtnAdmin').addEventListener('click', function() {
-            const name = document.getElementById('agentName').value;
-            const username = document.getElementById('agentUsername').value;
-            const password = document.getElementById('agentPassword').value;
-            const commission = parseInt(document.getElementById('agentCommission').value);
-
-            // Check if username already exists
-            if (globalData.users.find(u => u.username === username)) {
-                alert('Username already exists. Please choose a different username.');
-                return;
-            }
-
-            const newId = 'AGT' + (globalData.agents.length + 1).toString().padStart(3, '0');
-            globalData.agents.push({ 
-                id: newId, 
-                name: name, 
-                username: username,
-                commission: commission, 
-                balance: 0, 
-                status: 'active' 
-            });
-            
-            globalData.users.push({ 
-                id: newId, 
-                username: username, 
-                password: password, 
-                role: 'agent', 
-                commission: commission, 
-                balance: 0, 
-                status: 'active', 
-                isFirstLogin: true 
-            });
-
-            document.getElementById('agentActionModal').style.display = 'none';
-            populateAgentsTable();
-            alert('New Agent added successfully!');
-        });
-
-        function populateAgentsTable() {
-            const table = document.getElementById('agentsTableAdmin');
-            table.innerHTML = '';
-            
-            globalData.agents.forEach(agent => {
-                const statusClass = agent.status === 'active' ? 'btn-success' : 'btn-danger';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${agent.id}</td>
-                    <td>${agent.name}</td>
-                    <td>${agent.username}</td>
-                    <td>${agent.commission}%</td>
-                    <td>${formatMMK(agent.balance)}</td>
-                    <td><span class="btn ${statusClass} btn-sm">${agent.status}</span></td>
-                    <td>
-                        <button class="btn btn-primary btn-sm">Edit</button>
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </td>
-                `;
-                table.appendChild(row);
-            });
-        }
-        
-        // Admin Odd Management
-        document.getElementById('addOddBtn').addEventListener('click', function() {
-            document.getElementById('oddActionModal').style.display = 'flex';
-        });
-
-        document.getElementById('saveOddBtn').addEventListener('click', function() {
-            const match = document.getElementById('oddMatch').value;
-            const homeOdd = parseFloat(document.getElementById('oddHome').value);
-            const awayOdd = parseFloat(document.getElementById('oddAway').value);
-            const overOdd = parseFloat(document.getElementById('oddOver').value);
-            const underOdd = parseFloat(document.getElementById('oddUnder').value);
-
-            const newId = 'ODD' + (globalData.odds.length + 1).toString().padStart(3, '0');
-            globalData.odds.push({ id: newId, match, homeOdd, awayOdd, overOdd, underOdd, type: 'single' });
-
-            document.getElementById('oddActionModal').style.display = 'none';
-            populateOddsTable();
-            alert('New Odd added successfully!');
-        });
-
-        function populateOddsTable() {
-            const table = document.getElementById('oddsTableAdmin');
-            table.innerHTML = '';
-
-            globalData.odds.forEach(odd => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${odd.match}</td>
-                    <td>Home: ${odd.homeOdd} / Away: ${odd.awayOdd}</td>
-                    <td>Over: ${odd.overOdd} / Under: ${odd.underOdd}</td>
-                    <td>
-                        <button class="btn btn-primary btn-sm">Edit</button>
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </td>
-                `;
-                table.appendChild(row);
-            });
-        }
-        
-        // Admin Betting Logs
-        document.getElementById('refreshBetsBtn').addEventListener('click', function() {
-            populateBettingLogsTable();
-            alert('Betting logs refreshed!');
-        });
-
-        window.settleBet = function(betId, status) {
-            const bet = globalData.bets.find(b => b.id === betId);
-            if (!bet || bet.status !== 'Pending') return;
-            
-            const user = globalData.users.find(u => u.id === bet.userId);
-            if (!user) return;
-
-            bet.status = status;
-
-            if (status === 'Win') {
-                const winAmount = bet.amount * bet.odd;
-                const netWin = winAmount - bet.tax;
-                user.balance += netWin;
-                alert(`${user.username} won ${formatMMK(winAmount)}! Tax: ${formatMMK(bet.tax)}, Net: ${formatMMK(netWin)}`);
-            } else if (status === 'Lose') {
-                // Already deducted on bet placement. No action needed here.
-                alert(`${user.username} lost ${formatMMK(bet.amount)}.`);
-            }
-
-            populateBettingLogsTable();
-            // Also update frontend for the user if they are logged in
-            if (globalData.loggedInUser && globalData.loggedInUser.id === user.id) {
-                document.getElementById('frontendUserBalanceDisplay').textContent = formatMMK(user.balance);
-            }
-        }
-
-        function populateBettingLogsTable() {
-            const table = document.getElementById('bettingLogsTableAdmin');
-            table.innerHTML = '';
-            
-            globalData.bets.reverse().forEach(bet => {
-                const user = globalData.users.find(u => u.id === bet.userId);
-                const statusClass = bet.status === 'Win' ? 'btn-success' : bet.status === 'Lose' ? 'btn-danger' : 'btn-warning';
-                
-                let actions = `
-                    <button class="btn btn-success btn-sm" onclick="settleBet('${bet.id}', 'Win')">Win</button>
-                    <button class="btn btn-danger btn-sm" onclick="settleBet('${bet.id}', 'Lose')">Lose</button>
-                `;
-                if (bet.status !== 'Pending') {
-                    actions = `<span class="btn ${statusClass} btn-sm">${bet.status}</span>`;
-                }
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${bet.id}</td>
-                    <td>${user ? user.username : 'N/A'}</td>
-                    <td>${bet.match}</td>
-                    <td>${bet.betType}</td>
-                    <td>${bet.odd}</td>
-                    <td>${formatMMK(bet.amount)}</td>
-                    <td>${formatMMK(bet.tax)}</td>
-                    <td><span class="btn ${statusClass} btn-sm">${bet.status}</span></td>
-                    <td>${actions}</td>
-                `;
-                table.appendChild(row);
-            });
-        }
-        
-        // Admin Financial Logs
-        let currentReqId = null;
-
-        window.openFinancialActionModal = function(reqId) {
-            currentReqId = reqId;
-            const req = globalData.financialLogs.find(log => log.id === reqId);
-            const user = globalData.users.find(u => u.id === req.userId);
-            
-            document.getElementById('reqIdDisplay').textContent = req.id;
-            document.getElementById('reqUserDisplay').textContent = user ? user.username : 'N/A';
-            document.getElementById('reqTypeDisplay').textContent = req.type;
-            document.getElementById('reqAmountDisplay').textContent = formatMMK(req.amount);
-            document.getElementById('reqMethodDisplay').textContent = req.method;
-
-            document.getElementById('financialActionModal').style.display = 'flex';
-        }
-
-        document.getElementById('approveFinancialReq').addEventListener('click', function() {
-            processFinancialRequest(currentReqId, 'Approved');
-            document.getElementById('financialActionModal').style.display = 'none';
-        });
-
-        document.getElementById('declineFinancialReq').addEventListener('click', function() {
-            processFinancialRequest(currentReqId, 'Declined');
-            document.getElementById('financialActionModal').style.display = 'none';
-        });
-
-        function processFinancialRequest(reqId, status) {
-            const req = globalData.financialLogs.find(log => log.id === reqId);
-            const user = globalData.users.find(u => u.id === req.userId);
-            
-            if (!req || req.status !== 'Pending' || !user) return;
-            
-            req.status = status;
-            
-            if (status === 'Approved') {
-                if (req.type === 'Deposit') {
-                    user.balance += req.amount;
-                    alert(`Approved ${req.type} of ${formatMMK(req.amount)} for ${user.username}.`);
-                } else if (req.type === 'Withdrawal') {
-                    user.balance -= req.amount; // Deduct only on approval for withdrawal
-                    alert(`Approved ${req.type} of ${formatMMK(req.amount)} for ${user.username}.`);
-                }
-            } else if (status === 'Declined' && req.type === 'Withdrawal') {
-                // If withdrawal was simulated to deduct on request, it would need to be re-credited here.
-                // In this setup, we only deduct on approval, so no need to re-credit on decline.
-                alert(`Declined ${req.type} of ${formatMMK(req.amount)} for ${user.username}.`);
-            }
-            
-            populateFinancialLogsTable();
-            if (globalData.loggedInUser && globalData.loggedInUser.id === user.id) {
-                document.getElementById('frontendUserBalanceDisplay').textContent = formatMMK(user.balance);
-            }
-        }
-
-        function populateFinancialLogsTable() {
-            const table = document.getElementById('financialLogsTableAdmin');
-            table.innerHTML = '';
-            
-            globalData.financialLogs.filter(log => log.status !== 'Approved' || log.type === 'Deposit' || log.type === 'Withdrawal').reverse().forEach(log => {
-                const user = globalData.users.find(u => u.id === log.userId);
-                const statusClass = log.status === 'Approved' ? 'btn-success' : log.status === 'Pending' ? 'btn-warning' : 'btn-danger';
-                
-                let actions = '';
-                if (log.status === 'Pending') {
-                    actions = `<button class="btn btn-primary btn-sm" onclick="openFinancialActionModal('${log.id}')">Process</button>`;
+                    // Update UI with user info
+                    document.getElementById('usernameDisplay').textContent = currentUser.username;
+                    document.getElementById('userBalanceDisplay').textContent = `$${currentUser.balance.toFixed(2)}`;
+                    document.getElementById('accUsername').textContent = currentUser.username;
+                    document.getElementById('currentBalance').textContent = `$${currentUser.balance.toFixed(2)}`;
+                    document.getElementById('availableBalance').textContent = `$${(currentUser.balance - 50.25).toFixed(2)}`;
+                    document.getElementById('outstandingBets').textContent = "$50.25";
+                    
+                    // Populate recent activity
+                    populateRecentActivity();
+                    
+                    // Populate account statement
+                    populateAccountStatement();
                 } else {
-                    actions = `<span class="btn ${statusClass} btn-sm">${log.status}</span>`;
+                    alert('Invalid username or password. Please try again.');
                 }
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${log.id}</td>
-                    <td>${user ? user.username : 'N/A'}</td>
-                    <td>${log.type}</td>
-                    <td>${formatMMK(log.amount)}</td>
-                    <td>${log.method}</td>
-                    <td>${new Date(log.date).toLocaleDateString()}</td>
-                    <td>${log.status}</td>
-                    <td>${actions}</td>
-                `;
-                table.appendChild(row);
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                currentUser = null;
+                mainApp.classList.add('hidden');
+                loginModal.style.display = 'flex';
+                loginForm.reset();
             });
         }
 
-        // Admin Settings
-        document.getElementById('saveSupportSettings').addEventListener('click', function() {
-            globalData.settings.telegramUrl = document.getElementById('telegramUrlInput').value;
-            globalData.settings.viberUrl = document.getElementById('viberUrlInput').value;
-            telegramLink.href = globalData.settings.telegramUrl;
-            viberLink.href = globalData.settings.viberUrl;
-            alert('Support chat links saved and updated.');
-        });
-        
-        // Tax Settings
-        document.getElementById('saveTaxSettings').addEventListener('click', function() {
-            const newTaxRate = parseFloat(document.getElementById('taxRateInput').value);
-            if (isNaN(newTaxRate) || newTaxRate < 0 || newTaxRate > 100) {
-                alert('Please enter a valid tax rate between 0 and 100.');
+        function initializeSupportChat() {
+            const supportIcon = document.getElementById('supportIcon');
+            const supportOptions = document.getElementById('supportOptions');
+            
+            supportIcon.addEventListener('click', function() {
+                supportOptions.style.display = supportOptions.style.display === 'flex' ? 'none' : 'flex';
+            });
+            
+            // Set support links
+            document.getElementById('telegramLink').href = "https://t.me/i789support";
+            document.getElementById('viberLink').href = "viber://pa?chatURI=i789support";
+        }
+
+        function initializeBettingSystem() {
+            const tabLinks = document.querySelectorAll('.nav-link');
+            const oddsTypeButtons = document.querySelectorAll('.tab-button[data-odds-type]');
+            const selectLeagueBtn = document.getElementById('selectLeagueBtn');
+            const leagueModal = document.getElementById('leagueModal');
+            const closeLeagueModal = document.getElementById('closeLeagueModal');
+            const cancelLeagues = document.getElementById('cancelLeagues');
+            const applyLeagues = document.getElementById('applyLeagues');
+            const oddsTypeSelect = document.getElementById('oddsType');
+            const searchStatementBtn = document.getElementById('searchStatement');
+            const bettingActionBtns = document.querySelectorAll('.betting-action-btn');
+            
+            // Initialize leagues in modal
+            initializeLeaguesModal();
+            
+            // Main tab navigation
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs and content sections
+                    tabLinks.forEach(tab => tab.classList.remove('active'));
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab and corresponding content section
+                    this.classList.add('active');
+                    const targetId = this.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+            
+            // Odds type buttons (Live/Today/Early)
+            oddsTypeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    oddsTypeButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // In a real implementation, this would load different odds data
+                    const oddsType = this.getAttribute('data-odds-type');
+                    console.log(`Loading ${oddsType} odds...`);
+                });
+            });
+            
+            // Betting action buttons
+            bettingActionBtns.forEach(button => {
+                button.addEventListener('click', function() {
+                    bettingActionBtns.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const betType = this.getAttribute('data-bet-type');
+                    console.log(`Selected bet type: ${betType}`);
+                    // In a real implementation, this would update the betting interface
+                });
+            });
+            
+            // Select League button
+            selectLeagueBtn.addEventListener('click', function() {
+                leagueModal.style.display = 'flex';
+            });
+            
+            // Close league modal
+            closeLeagueModal.addEventListener('click', function() {
+                leagueModal.style.display = 'none';
+            });
+            
+            cancelLeagues.addEventListener('click', function() {
+                leagueModal.style.display = 'none';
+            });
+            
+            // Apply league selection
+            applyLeagues.addEventListener('click', function() {
+                updateSelectedLeagues();
+                renderMatches();
+                leagueModal.style.display = 'none';
+            });
+            
+            // Odds format change
+            oddsTypeSelect.addEventListener('change', function() {
+                currentOddsFormat = this.value;
+                renderMatches();
+            });
+            
+            // Search statement
+            searchStatementBtn.addEventListener('click', function() {
+                alert('Searching statement with selected filters...');
+                // In a real implementation, this would filter the statement data
+            });
+            
+            // Initialize matches display
+            renderMatches();
+            
+            // Initialize betting functionality
+            initializeBetting();
+        }
+
+        function initializeLeaguesModal() {
+            // Populate football leagues
+            const footballLeaguesContainer = document.getElementById('footballLeagues');
+            footballLeaguesContainer.innerHTML = '';
+            
+            footballLeaguesData.forEach(league => {
+                const leagueItem = document.createElement('div');
+                leagueItem.className = `league-item ${league.selected ? 'selected' : ''}`;
+                leagueItem.innerHTML = `
+                    <input type="checkbox" class="league-checkbox" id="${league.id}" ${league.selected ? 'checked' : ''}>
+                    <label for="${league.id}">${league.name}</label>
+                `;
+                footballLeaguesContainer.appendChild(leagueItem);
+                
+                // Add click event to toggle selection
+                leagueItem.addEventListener('click', function(e) {
+                    if (e.target.type !== 'checkbox') {
+                        const checkbox = this.querySelector('.league-checkbox');
+                        checkbox.checked = !checkbox.checked;
+                        this.classList.toggle('selected', checkbox.checked);
+                    }
+                });
+            });
+        }
+
+        function updateSelectedLeagues() {
+            // Reset selected leagues
+            selectedLeagues = [];
+            
+            // Get all checked checkboxes
+            const checkedBoxes = document.querySelectorAll('.league-checkbox:checked');
+            
+            checkedBoxes.forEach(checkbox => {
+                selectedLeagues.push(checkbox.id);
+            });
+        }
+
+        function renderMatches() {
+            const liveOddsContent = document.getElementById('liveOddsContent');
+            const noMatchesMessage = document.getElementById('noMatchesMessage');
+            
+            // Check if there are any selected leagues
+            if (selectedLeagues.length === 0) {
+                liveOddsContent.innerHTML = '<div class="no-matches" id="noMatchesMessage">No matches available. Please select leagues to view matches.</div>';
                 return;
             }
             
-            globalData.taxRate = newTaxRate;
-            alert(`Tax rate updated to ${newTaxRate}%. (${formatMMK(10000)} = ${formatMMK(calculateTax(10000))} tax)`);
-        });
-        
-        // Admin Chart Initialization (As per your provided code)
-        let revenueChartInstance, dailyReportChartInstance;
-        function initializeAdminCharts() {
-            if (revenueChartInstance) revenueChartInstance.destroy();
-            if (dailyReportChartInstance) dailyReportChartInstance.destroy();
+            // Hide no matches message
+            noMatchesMessage.style.display = 'none';
             
-            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-            revenueChartInstance = new Chart(revenueCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Revenue ('+CURRENCY_SYMBOL+')',
-                        data: [1200000, 1900000, 1500000, 1800000, 1600000, 2200000, 2500000],
-                        borderColor: '#3498db',
-                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-            });
-
-            const dailyReportCtx = document.getElementById('dailyReportChart').getContext('2d');
-            dailyReportChartInstance = new Chart(dailyReportCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['6 AM', '9 AM', '12 PM', '3 PM', '6 PM', '9 PM', '12 AM'],
-                    datasets: [
-                        { label: 'Bets Placed', data: [45, 78, 65, 92, 120, 85, 60], backgroundColor: '#3498db' },
-                        { label: 'Wins', data: [25, 45, 35, 52, 65, 40, 30], backgroundColor: '#27ae60' }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-        
-        // Admin Language Switcher
-        function updateAdminLanguage() {
-            document.querySelectorAll('#adminAgentApp [data-tab]').forEach(link => {
-                const tab = link.getAttribute('data-tab');
-                const span = link.querySelector('span');
-                if (span) span.textContent = texts[currentLang][tab] || tab;
-            });
-            const activeTab = document.querySelector('#adminAgentApp .sidebar-menu a.active').getAttribute('data-tab');
-            adminPageTitle.textContent = texts[currentLang][activeTab];
-            // You would normally update all hardcoded text here too
-        }
-
-        adminLangButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                adminLangButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                currentLang = this.getAttribute('data-lang');
-                updateAdminLanguage();
-            });
-        });
-
-        // ====================================================================
-        // GLOBAL LOGIN & APP FLOW
-        // ====================================================================
-
-        const globalLoginScreen = document.getElementById('globalLoginScreen');
-        const globalLoginForm = document.getElementById('globalLoginForm');
-        const passwordChangeModal = document.getElementById('passwordChangeModal');
-        const agreementModal = document.getElementById('agreementModal');
-
-        globalLoginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
+            let contentHTML = '';
             
-            const user = globalData.users.find(u => u.username === username && u.password === password);
+            // Render football matches for each selected league
+            selectedLeagues.forEach(leagueId => {
+                const league = footballLeaguesData.find(l => l.id === leagueId);
+                if (league && matchesByLeague[leagueId]) {
+                    contentHTML += `<div class="league-header">`;
+                    contentHTML += `<span><span class="live-indicator"></span> ${league.name.toUpperCase()} - LIVE MATCHES</span>`;
+                    contentHTML += `<span class="toggle-icon">−</span>`;
+                    contentHTML += `</div>`;
+                    contentHTML += `<div class="league-matches">`;
+                    contentHTML += `<div class="table-container">`;
+                    contentHTML += `<table class="odds-table">`;
+                    contentHTML += `<thead><tr><th width="40%">Match</th><th width="15%">Time</th><th width="9%">1</th><th width="9%">X</th><th width="9%">2</th><th width="9%">1X</th><th width="9%">12</th></tr></thead>`;
+                    contentHTML += `<tbody>`;
+                    
+                    matchesByLeague[leagueId].forEach(match => {
+                        const odds = oddsData[currentOddsFormat][match.name] || {};
+                        contentHTML += `
+                            <tr>
+                                <td>
+                                    <strong>${match.name}</strong>
+                                    <div class="match-time">${match.time}</div>
+                                </td>
+                                <td>
+                                    <span class="live-indicator"></span> LIVE
+                                </td>
+                                <td class="odds-cell" data-selection="${match.name} - 1" data-odds="${odds["1"] || "-"}">${odds["1"] || "-"}</td>
+                                <td class="odds-cell" data-selection="${match.name} - X" data-odds="${odds["X"] || "-"}">${odds["X"] || "-"}</td>
+                                <td class="odds-cell" data-selection="${match.name} - 2" data-odds="${odds["2"] || "-"}">${odds["2"] || "-"}</td>
+                                <td class="odds-cell" data-selection="${match.name} - 1X" data-odds="${odds["1X"] || "-"}">${odds["1X"] || "-"}</td>
+                                <td class="odds-cell" data-selection="${match.name} - 12" data-odds="${odds["12"] || "-"}">${odds["12"] || "-"}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    contentHTML += `</tbody></table></div></div>`;
+                }
+            });
+            
+            liveOddsContent.innerHTML = contentHTML;
+            
+            // Add toggle functionality to league headers
+            const leagueHeaders = document.querySelectorAll('.league-header');
+            leagueHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const matchesContainer = this.nextElementSibling;
+                    const toggleIcon = this.querySelector('.toggle-icon');
+                    
+                    if (matchesContainer.classList.contains('collapsed')) {
+                        matchesContainer.classList.remove('collapsed');
+                        toggleIcon.textContent = '−';
+                    } else {
+                        matchesContainer.classList.add('collapsed');
+                        toggleIcon.textContent = '+';
+                    }
+                });
+            });
+            
+            // Reinitialize betting functionality for the new odds cells
+            initializeBetting();
+        }
 
-            if (user) {
-                if (user.status === 'banned') {
-                    alert('Access Denied: Your account has been banned.');
+        function initializeBetting() {
+            // Odds selection
+            const oddsCells = document.querySelectorAll('.odds-cell');
+            const betSlip = document.getElementById('betSlip');
+            const betSlipContent = document.getElementById('betSlipContent');
+            const emptyBetSlip = document.getElementById('emptyBetSlip');
+            const closeBetSlip = document.getElementById('closeBetSlip');
+            const placeBet = document.getElementById('placeBet');
+            const betTypeIndicator = document.getElementById('betTypeIndicator');
+            const betSummary = document.getElementById('betSummary');
+            
+            oddsCells.forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const selection = this.getAttribute('data-selection');
+                    const odds = this.getAttribute('data-odds');
+                    const matchRow = this.closest('tr');
+                    const matchName = matchRow.querySelector('strong').textContent;
+                    
+                    // Toggle selection
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        removeFromBetSlip(selection);
+                    } else {
+                        this.classList.add('selected');
+                        addToBetSlip(matchName, selection, odds);
+                    }
+                    
+                    // Update bet type and summary
+                    updateBetType();
+                    updateBetSummary();
+                });
+            });
+            
+            function addToBetSlip(match, selection, odds) {
+                // Show bet slip if hidden
+                betSlip.style.display = 'block';
+                
+                // Remove empty message
+                if (emptyBetSlip) {
+                    emptyBetSlip.style.display = 'none';
+                }
+                
+                // Check if selection already exists
+                const existingIndex = betSelections.findIndex(item => 
+                    item.match === match && item.selection === selection);
+                
+                if (existingIndex === -1) {
+                    // Add new selection
+                    betSelections.push({ 
+                        match, 
+                        selection, 
+                        odds: parseFloat(odds),
+                        stake: 0
+                    });
+                    
+                    // Create bet item
+                    const betItem = document.createElement('div');
+                    betItem.className = 'bet-item';
+                    betItem.innerHTML = `
+                        <div><strong>${match}</strong></div>
+                        <div>${selection} @ ${odds}</div>
+                        <div>
+                            <input type="number" class="stake-input" placeholder="Stake" min="1" value="0">
+                            <button class="remove-bet" style="background: none; border: none; color: red; cursor: pointer; margin-left: 10px;">×</button>
+                        </div>
+                    `;
+                    
+                    // Add remove functionality
+                    const removeButton = betItem.querySelector('.remove-bet');
+                    removeButton.addEventListener('click', function() {
+                        betItem.remove();
+                        removeFromBetSlip(selection);
+                        
+                        // Remove selection highlight
+                        const selectedCell = document.querySelector(`.odds-cell[data-selection="${selection}"]`);
+                        if (selectedCell) {
+                            selectedCell.classList.remove('selected');
+                        }
+                        
+                        // Update bet type and summary
+                        updateBetType();
+                        updateBetSummary();
+                        
+                        // Show empty message if no bets
+                        if (betSlipContent.children.length === 1) { // Only the empty message remains
+                            emptyBetSlip.style.display = 'block';
+                            betSummary.style.display = 'none';
+                        }
+                    });
+                    
+                    // Add stake change listener
+                    const stakeInput = betItem.querySelector('.stake-input');
+                    stakeInput.addEventListener('input', function() {
+                        const stakeValue = parseFloat(this.value) || 0;
+                        updateStake(selection, stakeValue);
+                        updateBetSummary();
+                    });
+                    
+                    betSlipContent.appendChild(betItem);
+                }
+            }
+            
+            function removeFromBetSlip(selection) {
+                betSelections = betSelections.filter(item => item.selection !== selection);
+            }
+            
+            function updateStake(selection, stake) {
+                const betIndex = betSelections.findIndex(item => item.selection === selection);
+                if (betIndex !== -1) {
+                    betSelections[betIndex].stake = stake;
+                }
+            }
+            
+            function updateBetType() {
+                if (betSelections.length === 0) {
+                    betTypeIndicator.textContent = "Single";
+                    betTypeIndicator.className = "bet-type-indicator single-bet";
+                } else if (betSelections.length === 1) {
+                    betTypeIndicator.textContent = "Single Bet";
+                    betTypeIndicator.className = "bet-type-indicator single-bet";
+                } else {
+                    betTypeIndicator.textContent = "Parlay Bet";
+                    betTypeIndicator.className = "bet-type-indicator parlay-bet";
+                }
+            }
+            
+            function updateBetSummary() {
+                if (betSelections.length === 0) {
+                    betSummary.style.display = 'none';
                     return;
                 }
                 
-                globalData.loggedInUser = user;
-
-                if (user.isFirstLogin) {
-                    globalLoginScreen.style.display = 'none';
-                    passwordChangeModal.style.display = 'flex';
-                } else {
-                    showAgreementModal();
+                betSummary.style.display = 'block';
+                
+                // Calculate total odds
+                let totalOdds = 1;
+                betSelections.forEach(bet => {
+                    totalOdds *= bet.odds;
+                });
+                
+                // Calculate total stake
+                totalStake = betSelections.reduce((sum, bet) => sum + bet.stake, 0);
+                
+                // Calculate potential win
+                const potentialWin = totalStake * totalOdds;
+                
+                // Update display
+                document.getElementById('totalOdds').textContent = totalOdds.toFixed(2);
+                document.getElementById('totalStake').textContent = totalStake.toFixed(2);
+                document.getElementById('potentialWin').textContent = '$' + potentialWin.toFixed(2);
+            }
+            
+            // Close bet slip
+            closeBetSlip.addEventListener('click', function() {
+                betSlip.style.display = 'none';
+            });
+            
+            // Place bet
+            placeBet.addEventListener('click', function() {
+                if (betSelections.length === 0) {
+                    alert('Please add at least one selection to your bet slip.');
+                    return;
                 }
-
-            } else {
-                alert('Invalid Username or Password.');
-            }
-        });
-        
-        // Password Change Logic
-        document.getElementById('saveNewPassword').addEventListener('click', function() {
-            const newPass = document.getElementById('newPassword').value;
-            const confirmPass = document.getElementById('confirmPassword').value;
+                
+                // Check if all stakes are valid
+                const invalidStakes = betSelections.filter(bet => bet.stake <= 0);
+                if (invalidStakes.length > 0) {
+                    alert('Please enter valid stakes for all selections.');
+                    return;
+                }
+                
+                // Check if user has sufficient balance
+                if (totalStake > currentUser.balance) {
+                    alert('Insufficient balance. Please reduce your stake or deposit more funds.');
+                    return;
+                }
+                
+                // Determine bet type
+                const betType = betSelections.length === 1 ? 'Single Bet' : 'Parlay Bet';
+                
+                // Update user balance
+                currentUser.balance -= totalStake;
+                document.getElementById('userBalanceDisplay').textContent = `$${currentUser.balance.toFixed(2)}`;
+                document.getElementById('currentBalance').textContent = `$${currentUser.balance.toFixed(2)}`;
+                document.getElementById('availableBalance').textContent = `$${(currentUser.balance - 50.25).toFixed(2)}`;
+                
+                // In a real implementation, this would submit the bet to a server
+                alert(`${betType} placed successfully!\nTotal Stake: $${totalStake.toFixed(2)}\nPotential Win: $${(totalStake * betSelections.reduce((prod, bet) => prod * bet.odds, 1)).toFixed(2)}`);
+                
+                // Clear bet slip
+                betSlipContent.innerHTML = '<p id="emptyBetSlip">No bets added yet</p>';
+                betSelections = [];
+                totalStake = 0;
+                
+                // Remove selection highlights
+                oddsCells.forEach(cell => {
+                    cell.classList.remove('selected');
+                });
+                
+                // Update empty bet slip reference
+                emptyBetSlip = document.getElementById('emptyBetSlip');
+                betSummary.style.display = 'none';
+                updateBetType();
+                
+                // Update recent activity and statement
+                populateRecentActivity();
+                populateAccountStatement();
+            });
             
-            if (newPass.length < 6) {
-                alert('Password must be at least 6 characters.');
-                return;
-            }
-            if (newPass !== confirmPass) {
-                alert('Passwords do not match.');
-                return;
-            }
-            
-            globalData.loggedInUser.password = newPass;
-            globalData.loggedInUser.isFirstLogin = false;
-            passwordChangeModal.style.display = 'none';
-            alert('Password changed successfully! You will now proceed to the Terms & Conditions.');
-            showAgreementModal();
-        });
-
-        // Agreement Modal Logic
-        function showAgreementModal() {
-            // Show Agreement Modal before proceeding to app
-            globalLoginScreen.style.display = 'none';
-            passwordChangeModal.style.display = 'none';
-            agreementModal.style.display = 'flex';
+            // Simulate live odds updates
+            setInterval(() => {
+                // In a real implementation, this would fetch updated odds from a server
+                const liveOddsCells = document.querySelectorAll('.odds-cell');
+                liveOddsCells.forEach(cell => {
+                    // Randomly update some odds to simulate live changes
+                    if (Math.random() > 0.7) {
+                        const currentOddsText = cell.textContent;
+                        if (currentOddsText !== "-") {
+                            const currentOdds = parseFloat(currentOddsText);
+                            const change = (Math.random() * 0.2) - 0.1; // -0.1 to +0.1
+                            const newOdds = Math.round((currentOdds + change) * 100) / 100;
+                            
+                            // Only update if odds changed and it's not currently selected
+                            if (newOdds !== currentOdds && !cell.classList.contains('selected')) {
+                                cell.textContent = newOdds.toFixed(2);
+                                cell.setAttribute('data-odds', newOdds.toFixed(2));
+                                
+                                // Add visual feedback for changed odds
+                                cell.style.backgroundColor = '#fff3cd';
+                                setTimeout(() => {
+                                    cell.style.backgroundColor = '';
+                                }, 1000);
+                            }
+                        }
+                    }
+                });
+            }, 5000); // Update every 5 seconds
         }
 
-        document.getElementById('rejectAgreement').addEventListener('click', function() {
-            alert('You must accept the Terms & Conditions to proceed. Logging out.');
-            logout();
-        });
-
-        document.getElementById('acceptAgreement').addEventListener('click', function() {
-            agreementModal.style.display = 'none';
+        function populateRecentActivity() {
+            const recentActivityTable = document.getElementById('recentActivityTable');
             
-            const user = globalData.loggedInUser;
+            // Sample recent activity data
+            const recentActivity = [
+                { date: "2023-10-15", description: "Sports Bet - Soccer", amount: -25.00, balance: currentUser.balance },
+                { date: "2023-10-14", description: "Deposit", amount: 100.00, balance: currentUser.balance + 25.00 },
+                { date: "2023-10-12", description: "Sports Bet - Basketball", amount: 45.50, balance: currentUser.balance - 75.00 },
+                { date: "2023-10-10", description: "Sports Bet - Tennis", amount: -30.00, balance: currentUser.balance - 120.50 }
+            ];
             
-            if (user.role === 'admin' || user.role === 'agent') {
-                globalData.isAdmin = user.role === 'admin';
-                globalData.isAgent = user.role === 'agent';
-                adminAgentApp.style.display = 'flex';
-                userFrontendApp.style.display = 'none';
-                initializeAdminCharts();
-                initializeAdminPanel();
-            } else {
-                globalData.isAdmin = false;
-                globalData.isAgent = false;
-                adminAgentApp.style.display = 'none';
-                userFrontendApp.style.display = 'flex';
-                initializeFrontend();
-            }
-        });
-
-        // Logout Function
-        function logout() {
-            globalData.loggedInUser = null;
-            globalData.isAdmin = false;
-            globalData.isAgent = false;
+            let html = '';
+            recentActivity.forEach(activity => {
+                html += `
+                    <tr>
+                        <td>${activity.date}</td>
+                        <td>${activity.description}</td>
+                        <td class="${activity.amount < 0 ? 'text-danger' : 'text-success'}">${activity.amount < 0 ? '-' : '+'}$${Math.abs(activity.amount).toFixed(2)}</td>
+                        <td>$${activity.balance.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
             
-            globalLoginScreen.style.display = 'flex';
-            adminAgentApp.style.display = 'none';
-            userFrontendApp.style.display = 'none';
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-            supportOptions.style.display = 'none';
+            recentActivityTable.innerHTML = html;
         }
 
-        frontendLogoutBtn.addEventListener('click', logout);
-        adminLogoutBtn.addEventListener('click', logout);
-
-        // Initial Load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Display the login screen first
-            globalLoginScreen.style.display = 'flex';
-            // Pre-populate agents for 'Add User' modal
-            populateAgentSelect('userActionAgent');
-        });
+        function populateAccountStatement() {
+            const statementTable = document.getElementById('statementTable');
+            
+            // Sample statement data
+            const statementData = [
+                { date: "2023-10-15 14:30", id: "TXN78291", description: "Sports Bet - Soccer: Man City vs Arsenal", amount: -25.00, balance: currentUser.balance, status: "pending" },
+                { date: "2023-10-14 09:15", id: "TXN78245", description: "Deposit - Credit Card", amount: 100.00, balance: currentUser.balance + 25.00, status: "completed" },
+                { date: "2023-10-12 20:45", id: "TXN78189", description: "Win - Soccer: Liverpool vs Chelsea", amount: 45.50, balance: currentUser.balance - 75.00, status: "won" },
+                { date: "2023-10-10 16:20", id: "TXN78123", description: "Sports Bet - Soccer: Real Madrid vs Barcelona", amount: -30.00, balance: currentUser.balance - 120.50, status: "lost" }
+            ];
+            
+            let html = '';
+            statementData.forEach(transaction => {
+                let statusClass = '';
+                let statusText = '';
+                
+                switch(transaction.status) {
+                    case 'pending':
+                        statusClass = 'bet-pending';
+                        statusText = 'Pending';
+                        break;
+                    case 'completed':
+                        statusClass = 'bet-won';
+                        statusText = 'Completed';
+                        break;
+                    case 'won':
+                        statusClass = 'bet-won';
+                        statusText = 'Won';
+                        break;
+                    case 'lost':
+                        statusClass = 'bet-lost';
+                        statusText = 'Lost';
+                        break;
+                }
+                
+                html += `
+                    <tr>
+                        <td>${transaction.date}</td>
+                        <td>${transaction.id}</td>
+                        <td>${transaction.description}</td>
+                        <td class="${transaction.amount < 0 ? 'text-danger' : 'text-success'}">${transaction.amount < 0 ? '-' : '+'}$${Math.abs(transaction.amount).toFixed(2)}</td>
+                        <td>$${transaction.balance.toFixed(2)}</td>
+                        <td><span class="${statusClass}">${statusText}</span></td>
+                    </tr>
+                `;
+            });
+            
+            statementTable.innerHTML = html;
+        }
     </script>
 </body>
 </html>
