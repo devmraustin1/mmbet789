@@ -2,1695 +2,265 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>i789 Sport Portal - Live Betting</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Austin Demo Odds Sport Booking</title>
     <style>
-        :root {
-            --primary-color: #1a472a;
-            --secondary-color: #2d5a3d;
-            --accent-color: #4a7c59;
-            --text-color: #333;
-            --light-bg: #f5f5f5;
-            --border-color: #ddd;
-            --danger: #e74c3c;
-            --success: #27ae60;
-            --warning: #f39c12;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+            touch-action: manipulation;
         }
         
         body {
-            font-family: Arial, sans-serif;
-            background-color: var(--light-bg);
-            margin: 0;
-            padding: 0;
-            color: var(--text-color);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         
         .container {
-            max-width: 1200px;
+            flex: 1;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px 0;
-            margin-bottom: 20px;
-        }
-        
-        .nav-tabs {
-            border-bottom: 2px solid var(--primary-color);
-        }
-        
-        .nav-tabs .nav-link {
-            color: var(--text-color);
-            font-weight: bold;
-        }
-        
-        .nav-tabs .nav-link.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        .tab-content {
-            background-color: white;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            border-top: none;
-            min-height: 600px;
-        }
-        
-        .content-section {
-            display: none;
-        }
-        
-        .content-section.active {
-            display: block;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        th {
-            background-color: #f2f2f2;
-        }
-        
-        .odds-table th {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .odds-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .odds-cell {
-            text-align: center;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 8px 5px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-        
-        .odds-cell:hover {
-            background-color: #e9f7e9;
-        }
-        
-        .odds-cell.selected {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        .match-time {
-            font-size: 0.85em;
-            color: #666;
-        }
-        
-        .live-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: #e74c3c;
-            border-radius: 50%;
-            margin-right: 5px;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        .controls-container {
-            background-color: white;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-        
-        .controls-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .controls-row:last-child {
-            margin-bottom: 0;
-        }
-        
-        .control-item {
-            display: flex;
-            align-items: center;
-        }
-        
-        .control-label {
-            margin-right: 5px;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-        
-        .control-select, .control-input {
-            padding: 5px 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-        
-        .control-button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background-color 0.2s;
-        }
-        
-        .control-button:hover {
-            background-color: var(--secondary-color);
-        }
-        
-        .tab-button {
-            padding: 8px 15px;
-            background-color: #f0f0f0;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-        
-        .tab-button.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        .tab-button:hover:not(.active) {
-            background-color: #e0e0e0;
-        }
-        
-        .search-container {
-            display: flex;
-            align-items: center;
-        }
-        
-        .search-input {
-            padding: 5px 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px 0 0 4px;
-            font-size: 0.9em;
-        }
-        
-        .search-button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-        
-        .bet-slip {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            width: 350px;
-            background-color: white;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            display: none;
-        }
-        
-        .bet-slip-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .bet-slip-content {
-            padding: 10px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .bet-slip-footer {
-            padding: 10px;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .bet-item {
-            padding: 8px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .bet-item:last-child {
-            border-bottom: none;
-        }
-        
-        .bet-type-indicator {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            font-weight: bold;
-            margin-left: 8px;
-        }
-        
-        .single-bet {
-            background-color: #4a7c59;
-            color: white;
-        }
-        
-        .parlay-bet {
-            background-color: #e67e22;
-            color: white;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 20px;
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        .league-header {
-            background-color: #e9f7e9;
-            padding: 8px 15px;
-            font-weight: bold;
-            border-left: 4px solid var(--primary-color);
-            margin-top: 15px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .league-header:first-child {
-            margin-top: 0;
-        }
-        
-        .league-header .toggle-icon {
-            font-weight: bold;
-        }
-        
-        .league-matches {
-            display: block;
-        }
-        
-        .league-matches.collapsed {
-            display: none;
-        }
-        
-        /* Account Statement Styles */
-        .statement-filters {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .statement-table th {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .statement-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        .bet-won {
-            color: var(--success);
-            font-weight: bold;
-        }
-        
-        .bet-lost {
-            color: var(--danger);
-            font-weight: bold;
-        }
-        
-        .bet-pending {
-            color: var(--warning);
-            font-weight: bold;
-        }
-        
-        /* League Selection Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            width: 90%;
-            max-width: 800px;
-            max-height: 80vh;
-            border-radius: 4px;
-            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.7);
             display: flex;
             flex-direction: column;
         }
         
-        .modal-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-body {
-            padding: 15px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-        
-        .modal-footer {
-            padding: 15px;
-            border-top: 1px solid var(--border-color);
-            text-align: right;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5em;
-            cursor: pointer;
-        }
-        
-        .league-category {
-            margin-bottom: 20px;
-        }
-        
-        .league-category h4 {
-            margin-bottom: 10px;
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
-        }
-        
-        .league-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-        }
-        
-        .league-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .league-item:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .league-item.selected {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .league-checkbox {
-            margin-right: 10px;
-        }
-        
-        .no-matches {
+        header {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            padding: 15px 20px;
             text-align: center;
-            padding: 20px;
-            color: #666;
-            font-style: italic;
-        }
-        
-        .stake-input {
-            width: 80px;
-            padding: 5px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-        }
-        
-        .bet-summary {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-        }
-        
-        .bet-summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        .total-odds {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        
-        .potential-win {
-            font-weight: bold;
-            color: var(--success);
-            font-size: 1.2em;
-        }
-        
-        /* Login Modal */
-        .login-modal {
-            display: flex;
-            position: fixed;
+            border-bottom: 3px solid #fdbb2d;
+            position: sticky;
             top: 0;
-            left: 0;
+            z-index: 100;
+        }
+        
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            opacity: 0.9;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            gap: 15px;
+        }
+        
+        .iframe-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            min-height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #2c5364;
+        }
+        
+        iframe {
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .login-box {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 400px;
-            padding: 30px;
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .login-header h2 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .login-footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #777;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .btn {
-            padding: 8px 15px;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
         }
         
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-        
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .user-info-bar {
-            background-color: #333;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+        .controls {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            color: white;
-        }
-        
-        .user-info-bar span {
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-        
-        .betting-actions {
-            display: flex;
+            background-color: rgba(44, 83, 100, 0.5);
+            padding: 12px;
+            border-radius: 10px;
             gap: 10px;
-            margin-bottom: 20px;
         }
         
-        .betting-action-btn {
-            background-color: var(--primary-color);
+        .margin-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #fdbb2d, #b21f1f);
             color: white;
             border: none;
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            white-space: nowrap;
         }
         
-        .betting-action-btn:hover {
-            background-color: var(--secondary-color);
+        button:hover, button:active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
-        .betting-action-btn.active {
-            background-color: var(--accent-color);
+        .info {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 10px;
         }
         
-        .support-chat-popup {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1001;
-        }
-
-        .support-icon {
-            width: 60px;
-            height: 60px;
-            background-color: #25d366;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .support-icon:hover {
-            transform: scale(1.1);
-        }
-
-        .support-options {
-            position: absolute;
-            bottom: 70px;
-            right: 0;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            display: none;
-            flex-direction: column;
-            width: 150px;
-        }
-
-        .support-options a {
-            padding: 10px;
-            text-decoration: none;
-            color: #333;
-            display: flex;
-            align-items: center;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-
-        .support-options a:hover {
-            background-color: #eee;
-        }
-
-        .support-options i {
-            margin-right: 10px;
-            font-size: 20px;
+        .info h3 {
+            margin-bottom: 8px;
+            color: #fdbb2d;
+            font-size: 1.1rem;
         }
         
-        .tg-color { color: #0088cc; } 
-        .vb-color { color: #7f5195; }
+        .info p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
         
-        .hidden {
-            display: none;
+        input[type="range"] {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        /* Prevent text selection and context menu */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Disable double-tap zoom */
+        * {
+            touch-action: manipulation;
+        }
+        
+        /* Media queries for different screen sizes */
+        @media (max-width: 768px) {
+            .content {
+                padding: 10px;
+                gap: 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .margin-control {
+                min-width: 100%;
+            }
+            
+            .iframe-container {
+                min-height: 400px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 10px 15px;
+            }
+            
+            .iframe-container {
+                min-height: 350px;
+            }
+            
+            .controls {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Login Modal -->
-    <div class="login-modal" id="loginModal">
-        <div class="login-box">
-            <div class="login-header">
-                <h2>i789 Sport Portal Login</h2>
-                <p>Welcome to our betting platform</p>
+    <div class="container">
+        <header>
+            <h1>Austin Demo Odds Sport Booking</h1>
+            <div class="subtitle">Live Sports Betting Odds & Booking Interface</div>
+        </header>
+        
+        <div class="content">
+            <div class="controls">
+                <div class="margin-control">
+                    <label for="margin-slider">Adjust Margins:</label>
+                    <input type="range" id="margin-slider" min="0" max="20" value="5">
+                    <span id="margin-value">5%</span>
+                </div>
+                <button id="refresh-btn">Refresh Data</button>
             </div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginUsername">Username</label>
-                    <input type="text" id="loginUsername" class="form-control" placeholder="Enter username" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-secondary" style="width: 100%;">Login</button>
-                </div>
-            </form>
-            <div class="login-footer">
-                <p>Test Credentials: User: user1/user1 | Admin: admin/admin</p>
+            
+            <div class="iframe-container">
+                <iframe src="https://demo-light.442hattrick.com/en/asian-view/today/" 
+                        title="Austin Demo Odds Sport Booking Interface" 
+                        id="booking-iframe"></iframe>
             </div>
-        </div>
-    </div>
-
-    <!-- Main Application (Initially Hidden) -->
-    <div id="mainApp" class="hidden">
-        <div class="header">
-            <div class="container">
-                <h1>i789 Sport Portal - Live Betting</h1>
-                <div class="user-info-bar">
-                    <div>User: <span id="usernameDisplay"></span> | Balance: <span id="userBalanceDisplay" style="color: var(--warning);">$0.00</span></div>
-                    <button class="btn btn-danger btn-sm" id="logoutBtn">Logout</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <ul class="nav nav-tabs" id="mainTabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" data-target="accInfo">Account Information</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-target="accHistory">Account Statement</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-target="odds">Live Odds</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <!-- Account Information Section -->
-                <div id="accInfo" class="content-section active">
-                    <h2>Account Information</h2>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-header">
-                                    <h5>Personal Details</h5>
-                                </div>
-                                <div class="card-body">
-                                    <p><strong>Username:</strong> <span id="accUsername"></span></p>
-                                    <p><strong>Account Type:</strong> <span id="accType">Member</span></p>
-                                    <p><strong>Currency:</strong> USD</p>
-                                    <p><strong>Status:</strong> Active</p>
-                                    <p><strong>Registration Date:</strong> <span id="regDate">2023-05-15</span></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-header">
-                                    <h5>Balance Information</h5>
-                                </div>
-                                <div class="card-body">
-                                    <p><strong>Current Balance:</strong> <span id="currentBalance">$0.00</span></p>
-                                    <p><strong>Available Balance:</strong> <span id="availableBalance">$0.00</span></p>
-                                    <p><strong>Credit Limit:</strong> $5,000.00</p>
-                                    <p><strong>Outstanding Bets:</strong> <span id="outstandingBets">$0.00</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Recent Activity</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-container">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Description</th>
-                                            <th>Amount</th>
-                                            <th>Balance</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recentActivityTable">
-                                        <!-- Recent activity will be populated by JavaScript -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Account Statement Section -->
-                <div id="accHistory" class="content-section">
-                    <h2>Account Statement</h2>
-                    
-                    <div class="statement-filters">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="statementDateFrom" class="form-label">From Date</label>
-                                <input type="date" class="form-control" id="statementDateFrom" value="2023-10-01">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="statementDateTo" class="form-label">To Date</label>
-                                <input type="date" class="form-control" id="statementDateTo" value="2023-10-15">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="statementType" class="form-label">Transaction Type</label>
-                                <select class="form-control" id="statementType">
-                                    <option value="all">All Transactions</option>
-                                    <option value="deposit">Deposits</option>
-                                    <option value="withdrawal">Withdrawals</option>
-                                    <option value="bet">Bets</option>
-                                    <option value="win">Winnings</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 d-flex align-items-end">
-                                <button class="btn btn-primary w-100" id="searchStatement">Search</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="table-container">
-                        <table class="statement-table">
-                            <thead>
-                                <tr>
-                                    <th>Date/Time</th>
-                                    <th>Transaction ID</th>
-                                    <th>Description</th>
-                                    <th>Amount</th>
-                                    <th>Balance</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="statementTable">
-                                <!-- Statement data will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Live Odds Section -->
-                <div id="odds" class="content-section">
-                    <h2>Live Betting Odds</h2>
-                    
-                    <!-- Betting Actions -->
-                    <div class="betting-actions">
-                        <button class="betting-action-btn active" data-bet-type="single">Single Bet</button>
-                        <button class="betting-action-btn" data-bet-type="parlay">Parlay Bet</button>
-                        <button class="betting-action-btn" data-bet-type="ht">HT Bet</button>
-                        <button class="betting-action-btn" data-bet-type="ft">FT Bet</button>
-                    </div>
-                    
-                    <!-- Navigation Controls -->
-                    <div class="controls-container">
-                        <!-- First Row: Live/Today/Early/Select League/Search -->
-                        <div class="controls-row">
-                            <button class="tab-button active" data-odds-type="live">Live</button>
-                            <button class="tab-button" data-odds-type="today">Today</button>
-                            <button class="tab-button" data-odds-type="early">Early</button>
-                            <button class="tab-button" id="selectLeagueBtn">Select League</button>
-                            <div class="search-container">
-                                <input type="text" class="search-input" placeholder="Search Team">
-                                <button class="search-button">Search</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Second Row: Filters -->
-                        <div class="controls-row">
-                            <div class="control-item">
-                                <span class="control-label">Time:</span>
-                                <select class="control-select" id="timeFilter">
-                                    <option value="upcoming">Upcoming</option>
-                                    <option value="top">Top</option>
-                                    <option value="before11">Before 11:00PM</option>
-                                    <option value="after11">After 11:00PM</option>
-                                    <option value="all">All</option>
-                                </select>
-                            </div>
-                            
-                            <div class="control-item">
-                                <span class="control-label">Market:</span>
-                                <select class="control-select" id="marketFilter">
-                                    <option value="all">All Market</option>
-                                    <option value="main">Main Market</option>
-                                </select>
-                            </div>
-                            
-                            <div class="control-item">
-                                <span class="control-label">View:</span>
-                                <select class="control-select" id="viewFilter">
-                                    <option value="single-new">Single (New)</option>
-                                    <option value="single-old">Single (Old)</option>
-                                    <option value="double" selected>Double</option>
-                                </select>
-                            </div>
-                            
-                            <div class="control-item">
-                                <span class="control-label">Sort:</span>
-                                <select class="control-select" id="sortFilter">
-                                    <option value="normal">Normal Sorting</option>
-                                    <option value="time">Sort by time</option>
-                                </select>
-                            </div>
-                            
-                            <div class="control-item">
-                                <span class="control-label">Odds:</span>
-                                <select class="control-select" id="oddsType">
-                                    <option value="euro">EURO</option>
-                                    <option value="malay" selected>Malay</option>
-                                    <option value="hk">HK</option>
-                                    <option value="indo">Indo</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Live Odds Content -->
-                    <div id="liveOddsContent">
-                        <!-- Selected Leagues will be displayed here -->
-                        <div class="no-matches" id="noMatchesMessage">
-                            No matches available. Please select leagues to view matches.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- League Selection Modal -->
-        <div class="modal-overlay" id="leagueModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Select Football Leagues</h3>
-                    <button class="close-modal" id="closeLeagueModal">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="league-category">
-                        <h4>FOOTBALL LEAGUES</h4>
-                        <div class="league-list" id="footballLeagues">
-                            <!-- Football leagues will be populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="control-button" id="applyLeagues">Apply Selection</button>
-                    <button class="control-button" style="background-color: #6c757d;" id="cancelLeagues">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bet Slip -->
-        <div class="bet-slip" id="betSlip">
-            <div class="bet-slip-header">
-                <span>Bet Slip <span id="betTypeIndicator" class="bet-type-indicator single-bet">Single</span></span>
-                <button id="closeBetSlip" style="background: none; border: none; color: white; cursor: pointer;">×</button>
-            </div>
-            <div class="bet-slip-content" id="betSlipContent">
-                <!-- Bet items will be added here dynamically -->
-                <p id="emptyBetSlip">No bets added yet</p>
-            </div>
-            <div class="bet-slip-footer">
-                <div class="bet-summary" id="betSummary" style="display: none;">
-                    <div class="bet-summary-row">
-                        <span>Total Odds:</span>
-                        <span id="totalOdds" class="total-odds">1.00</span>
-                    </div>
-                    <div class="bet-summary-row">
-                        <span>Stake:</span>
-                        <span>$<span id="totalStake">0.00</span></span>
-                    </div>
-                    <div class="bet-summary-row">
-                        <span>Potential Win:</span>
-                        <span id="potentialWin" class="potential-win">$0.00</span>
-                    </div>
-                </div>
-                <div style="text-align: right; margin-top: 10px;">
-                    <button class="control-button" id="placeBet">Place Bet</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Support Chat -->
-        <div class="support-chat-popup">
-            <div class="support-icon" id="supportIcon">
-                <i class="fas fa-comments"></i>
-            </div>
-            <div class="support-options" id="supportOptions">
-                <a href="#" id="telegramLink" target="_blank"><i class="fab fa-telegram-plane tg-color"></i> Telegram Chat</a>
-                <a href="#" id="viberLink" target="_blank"><i class="fab fa-viber vb-color"></i> Viber Chat</a>
-            </div>
-        </div>
-
-        <div class="footer">
-            <div class="container">
-                <p>© 2023 i789 Sport Portal. All rights reserved.</p>
-                <p>This is a demonstration page only.</p>
+            
+            <div class="info">
+                <h3>About This Demo</h3>
+                <p>This interface displays live sports betting odds with adjustable margins. Use the slider above to modify the profit margins applied to the displayed odds. The embedded content shows today's Asian view odds for various sporting events.</p>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Data for different odds formats
-        const oddsData = {
-            euro: {
-                "Manchester City vs Arsenal": { "1": "2.10", "X": "3.25", "2": "3.50", "1X": "1.40", "12": "1.25" },
-                "Liverpool vs Chelsea": { "1": "2.30", "X": "3.10", "2": "3.20", "1X": "1.45", "12": "1.30" },
-                "Real Madrid vs Barcelona": { "1": "2.05", "X": "3.40", "2": "3.60", "1X": "1.35", "12": "1.20" },
-                "Bayern Munich vs Borussia Dortmund": { "1": "1.85", "X": "3.60", "2": "4.20", "1X": "1.25", "12": "1.15" },
-                "PSG vs Marseille": { "1": "1.75", "X": "3.50", "2": "4.50", "1X": "1.20", "12": "1.10" }
-            },
-            malay: {
-                "Manchester City vs Arsenal": { "1": "0.48", "X": "0.31", "2": "0.29", "1X": "0.71", "12": "0.80" },
-                "Liverpool vs Chelsea": { "1": "0.43", "X": "0.32", "2": "0.31", "1X": "0.69", "12": "0.77" },
-                "Real Madrid vs Barcelona": { "1": "0.49", "X": "0.29", "2": "0.28", "1X": "0.74", "12": "0.83" },
-                "Bayern Munich vs Borussia Dortmund": { "1": "0.54", "X": "0.28", "2": "0.24", "1X": "0.80", "12": "0.87" },
-                "PSG vs Marseille": { "1": "0.57", "X": "0.29", "2": "0.22", "1X": "0.83", "12": "0.91" }
-            },
-            hk: {
-                "Manchester City vs Arsenal": { "1": "1.10", "X": "2.25", "2": "2.50", "1X": "0.40", "12": "0.25" },
-                "Liverpool vs Chelsea": { "1": "1.30", "X": "2.10", "2": "2.20", "1X": "0.45", "12": "0.30" },
-                "Real Madrid vs Barcelona": { "1": "1.05", "X": "2.40", "2": "2.60", "1X": "0.35", "12": "0.20" },
-                "Bayern Munich vs Borussia Dortmund": { "1": "0.85", "X": "2.60", "2": "3.20", "1X": "0.25", "12": "0.15" },
-                "PSG vs Marseille": { "1": "0.75", "X": "2.50", "2": "3.50", "1X": "0.20", "12": "0.10" }
-            },
-            indo: {
-                "Manchester City vs Arsenal": { "1": "1.10", "X": "2.25", "2": "2.50", "1X": "0.40", "12": "0.25" },
-                "Liverpool vs Chelsea": { "1": "1.30", "X": "2.10", "2": "2.20", "1X": "0.45", "12": "0.30" },
-                "Real Madrid vs Barcelona": { "1": "1.05", "X": "2.40", "2": "2.60", "1X": "0.35", "12": "0.20" },
-                "Bayern Munich vs Borussia Dortmund": { "1": "0.85", "X": "2.60", "2": "3.20", "1X": "0.25", "12": "0.15" },
-                "PSG vs Marseille": { "1": "0.75", "X": "2.50", "2": "3.50", "1X": "0.20", "12": "0.10" }
-            }
-        };
-
-        // Football leagues data
-        const footballLeaguesData = [
-            { id: "premier-league", name: "Premier League", selected: true },
-            { id: "laliga", name: "Spain LaLiga", selected: true },
-            { id: "serie-a", name: "Italy Serie A", selected: true },
-            { id: "bundesliga", name: "Germany Bundesliga", selected: true },
-            { id: "ligue-1", name: "France Ligue 1", selected: true }
-        ];
-
-        // Match data by league
-        const matchesByLeague = {
-            "premier-league": [
-                { id: "m1", name: "Manchester City vs Arsenal", time: "Live - 35'", sport: "football" },
-                { id: "m2", name: "Liverpool vs Chelsea", time: "Live - 22'", sport: "football" }
-            ],
-            "laliga": [
-                { id: "m3", name: "Real Madrid vs Barcelona", time: "Live - 15'", sport: "football" }
-            ],
-            "serie-a": [
-                { id: "m4", name: "Juventus vs AC Milan", time: "Live - 28'", sport: "football" }
-            ],
-            "bundesliga": [
-                { id: "m5", name: "Bayern Munich vs Borussia Dortmund", time: "Live - 42'", sport: "football" }
-            ],
-            "ligue-1": [
-                { id: "m6", name: "PSG vs Marseille", time: "Live - 19'", sport: "football" }
-            ]
-        };
-
-        // User data
-        const users = {
-            "user1": { username: "user1", password: "user1", balance: 1250.75, role: "user" },
-            "admin": { username: "admin", password: "admin", balance: 5000.00, role: "admin" }
-        };
-
-        // Current selected leagues
-        let selectedLeagues = ["premier-league", "laliga", "serie-a", "bundesliga", "ligue-1"];
-
-        // Current odds format
-        let currentOddsFormat = "malay";
-
-        // Bet slip data
-        let betSelections = [];
-        let totalStake = 0;
-
-        // Current user
-        let currentUser = null;
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize login functionality
-            initializeLogin();
+            const marginSlider = document.getElementById('margin-slider');
+            const marginValue = document.getElementById('margin-value');
+            const refreshBtn = document.getElementById('refresh-btn');
+            const iframe = document.getElementById('booking-iframe');
             
-            // Initialize support chat
-            initializeSupportChat();
-            
-            // Initialize betting functionality
-            initializeBettingSystem();
-        });
-
-        function initializeLogin() {
-            const loginForm = document.getElementById('loginForm');
-            const loginModal = document.getElementById('loginModal');
-            const mainApp = document.getElementById('mainApp');
-            const logoutBtn = document.getElementById('logoutBtn');
-            
-            // Show login modal initially
-            loginModal.style.display = 'flex';
-            
-            // Login form submission
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const username = document.getElementById('loginUsername').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                // Check credentials
-                if (users[username] && users[username].password === password) {
-                    // Login successful
-                    currentUser = users[username];
-                    loginModal.style.display = 'none';
-                    mainApp.classList.remove('hidden');
-                    
-                    // Update UI with user info
-                    document.getElementById('usernameDisplay').textContent = currentUser.username;
-                    document.getElementById('userBalanceDisplay').textContent = `$${currentUser.balance.toFixed(2)}`;
-                    document.getElementById('accUsername').textContent = currentUser.username;
-                    document.getElementById('currentBalance').textContent = `$${currentUser.balance.toFixed(2)}`;
-                    document.getElementById('availableBalance').textContent = `$${(currentUser.balance - 50.25).toFixed(2)}`;
-                    document.getElementById('outstandingBets').textContent = "$50.25";
-                    
-                    // Populate recent activity
-                    populateRecentActivity();
-                    
-                    // Populate account statement
-                    populateAccountStatement();
-                } else {
-                    alert('Invalid username or password. Please try again.');
-                }
+            // Update margin value display
+            marginSlider.addEventListener('input', function() {
+                marginValue.textContent = this.value + '%';
+                // In a real implementation, this would adjust the odds margins
+                console.log('Margin adjusted to: ' + this.value + '%');
             });
             
-            // Logout functionality
-            logoutBtn.addEventListener('click', function() {
-                currentUser = null;
-                mainApp.classList.add('hidden');
-                loginModal.style.display = 'flex';
-                loginForm.reset();
-            });
-        }
-
-        function initializeSupportChat() {
-            const supportIcon = document.getElementById('supportIcon');
-            const supportOptions = document.getElementById('supportOptions');
-            
-            supportIcon.addEventListener('click', function() {
-                supportOptions.style.display = supportOptions.style.display === 'flex' ? 'none' : 'flex';
+            // Refresh iframe
+            refreshBtn.addEventListener('click', function() {
+                iframe.src = iframe.src;
             });
             
-            // Set support links
-            document.getElementById('telegramLink').href = "https://t.me/i789support";
-            document.getElementById('viberLink').href = "viber://pa?chatURI=i789support";
-        }
-
-        function initializeBettingSystem() {
-            const tabLinks = document.querySelectorAll('.nav-link');
-            const oddsTypeButtons = document.querySelectorAll('.tab-button[data-odds-type]');
-            const selectLeagueBtn = document.getElementById('selectLeagueBtn');
-            const leagueModal = document.getElementById('leagueModal');
-            const closeLeagueModal = document.getElementById('closeLeagueModal');
-            const cancelLeagues = document.getElementById('cancelLeagues');
-            const applyLeagues = document.getElementById('applyLeagues');
-            const oddsTypeSelect = document.getElementById('oddsType');
-            const searchStatementBtn = document.getElementById('searchStatement');
-            const bettingActionBtns = document.querySelectorAll('.betting-action-btn');
-            
-            // Initialize leagues in modal
-            initializeLeaguesModal();
-            
-            // Main tab navigation
-            tabLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+            // Prevent zooming with keyboard
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '0')) {
                     e.preventDefault();
-                    
-                    // Remove active class from all tabs and content sections
-                    tabLinks.forEach(tab => tab.classList.remove('active'));
-                    document.querySelectorAll('.content-section').forEach(section => {
-                        section.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked tab and corresponding content section
-                    this.classList.add('active');
-                    const targetId = this.getAttribute('data-target');
-                    document.getElementById(targetId).classList.add('active');
-                });
-            });
-            
-            // Odds type buttons (Live/Today/Early)
-            oddsTypeButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    oddsTypeButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // In a real implementation, this would load different odds data
-                    const oddsType = this.getAttribute('data-odds-type');
-                    console.log(`Loading ${oddsType} odds...`);
-                });
-            });
-            
-            // Betting action buttons
-            bettingActionBtns.forEach(button => {
-                button.addEventListener('click', function() {
-                    bettingActionBtns.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const betType = this.getAttribute('data-bet-type');
-                    console.log(`Selected bet type: ${betType}`);
-                    // In a real implementation, this would update the betting interface
-                });
-            });
-            
-            // Select League button
-            selectLeagueBtn.addEventListener('click', function() {
-                leagueModal.style.display = 'flex';
-            });
-            
-            // Close league modal
-            closeLeagueModal.addEventListener('click', function() {
-                leagueModal.style.display = 'none';
-            });
-            
-            cancelLeagues.addEventListener('click', function() {
-                leagueModal.style.display = 'none';
-            });
-            
-            // Apply league selection
-            applyLeagues.addEventListener('click', function() {
-                updateSelectedLeagues();
-                renderMatches();
-                leagueModal.style.display = 'none';
-            });
-            
-            // Odds format change
-            oddsTypeSelect.addEventListener('change', function() {
-                currentOddsFormat = this.value;
-                renderMatches();
-            });
-            
-            // Search statement
-            searchStatementBtn.addEventListener('click', function() {
-                alert('Searching statement with selected filters...');
-                // In a real implementation, this would filter the statement data
-            });
-            
-            // Initialize matches display
-            renderMatches();
-            
-            // Initialize betting functionality
-            initializeBetting();
-        }
-
-        function initializeLeaguesModal() {
-            // Populate football leagues
-            const footballLeaguesContainer = document.getElementById('footballLeagues');
-            footballLeaguesContainer.innerHTML = '';
-            
-            footballLeaguesData.forEach(league => {
-                const leagueItem = document.createElement('div');
-                leagueItem.className = `league-item ${league.selected ? 'selected' : ''}`;
-                leagueItem.innerHTML = `
-                    <input type="checkbox" class="league-checkbox" id="${league.id}" ${league.selected ? 'checked' : ''}>
-                    <label for="${league.id}">${league.name}</label>
-                `;
-                footballLeaguesContainer.appendChild(leagueItem);
-                
-                // Add click event to toggle selection
-                leagueItem.addEventListener('click', function(e) {
-                    if (e.target.type !== 'checkbox') {
-                        const checkbox = this.querySelector('.league-checkbox');
-                        checkbox.checked = !checkbox.checked;
-                        this.classList.toggle('selected', checkbox.checked);
-                    }
-                });
-            });
-        }
-
-        function updateSelectedLeagues() {
-            // Reset selected leagues
-            selectedLeagues = [];
-            
-            // Get all checked checkboxes
-            const checkedBoxes = document.querySelectorAll('.league-checkbox:checked');
-            
-            checkedBoxes.forEach(checkbox => {
-                selectedLeagues.push(checkbox.id);
-            });
-        }
-
-        function renderMatches() {
-            const liveOddsContent = document.getElementById('liveOddsContent');
-            const noMatchesMessage = document.getElementById('noMatchesMessage');
-            
-            // Check if there are any selected leagues
-            if (selectedLeagues.length === 0) {
-                liveOddsContent.innerHTML = '<div class="no-matches" id="noMatchesMessage">No matches available. Please select leagues to view matches.</div>';
-                return;
-            }
-            
-            // Hide no matches message
-            noMatchesMessage.style.display = 'none';
-            
-            let contentHTML = '';
-            
-            // Render football matches for each selected league
-            selectedLeagues.forEach(leagueId => {
-                const league = footballLeaguesData.find(l => l.id === leagueId);
-                if (league && matchesByLeague[leagueId]) {
-                    contentHTML += `<div class="league-header">`;
-                    contentHTML += `<span><span class="live-indicator"></span> ${league.name.toUpperCase()} - LIVE MATCHES</span>`;
-                    contentHTML += `<span class="toggle-icon">−</span>`;
-                    contentHTML += `</div>`;
-                    contentHTML += `<div class="league-matches">`;
-                    contentHTML += `<div class="table-container">`;
-                    contentHTML += `<table class="odds-table">`;
-                    contentHTML += `<thead><tr><th width="40%">Match</th><th width="15%">Time</th><th width="9%">1</th><th width="9%">X</th><th width="9%">2</th><th width="9%">1X</th><th width="9%">12</th></tr></thead>`;
-                    contentHTML += `<tbody>`;
-                    
-                    matchesByLeague[leagueId].forEach(match => {
-                        const odds = oddsData[currentOddsFormat][match.name] || {};
-                        contentHTML += `
-                            <tr>
-                                <td>
-                                    <strong>${match.name}</strong>
-                                    <div class="match-time">${match.time}</div>
-                                </td>
-                                <td>
-                                    <span class="live-indicator"></span> LIVE
-                                </td>
-                                <td class="odds-cell" data-selection="${match.name} - 1" data-odds="${odds["1"] || "-"}">${odds["1"] || "-"}</td>
-                                <td class="odds-cell" data-selection="${match.name} - X" data-odds="${odds["X"] || "-"}">${odds["X"] || "-"}</td>
-                                <td class="odds-cell" data-selection="${match.name} - 2" data-odds="${odds["2"] || "-"}">${odds["2"] || "-"}</td>
-                                <td class="odds-cell" data-selection="${match.name} - 1X" data-odds="${odds["1X"] || "-"}">${odds["1X"] || "-"}</td>
-                                <td class="odds-cell" data-selection="${match.name} - 12" data-odds="${odds["12"] || "-"}">${odds["12"] || "-"}</td>
-                            </tr>
-                        `;
-                    });
-                    
-                    contentHTML += `</tbody></table></div></div>`;
                 }
             });
             
-            liveOddsContent.innerHTML = contentHTML;
-            
-            // Add toggle functionality to league headers
-            const leagueHeaders = document.querySelectorAll('.league-header');
-            leagueHeaders.forEach(header => {
-                header.addEventListener('click', function() {
-                    const matchesContainer = this.nextElementSibling;
-                    const toggleIcon = this.querySelector('.toggle-icon');
-                    
-                    if (matchesContainer.classList.contains('collapsed')) {
-                        matchesContainer.classList.remove('collapsed');
-                        toggleIcon.textContent = '−';
-                    } else {
-                        matchesContainer.classList.add('collapsed');
-                        toggleIcon.textContent = '+';
-                    }
-                });
+            // Prevent context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
             });
             
-            // Reinitialize betting functionality for the new odds cells
-            initializeBetting();
-        }
-
-        function initializeBetting() {
-            // Odds selection
-            const oddsCells = document.querySelectorAll('.odds-cell');
-            const betSlip = document.getElementById('betSlip');
-            const betSlipContent = document.getElementById('betSlipContent');
-            const emptyBetSlip = document.getElementById('emptyBetSlip');
-            const closeBetSlip = document.getElementById('closeBetSlip');
-            const placeBet = document.getElementById('placeBet');
-            const betTypeIndicator = document.getElementById('betTypeIndicator');
-            const betSummary = document.getElementById('betSummary');
-            
-            oddsCells.forEach(cell => {
-                cell.addEventListener('click', function() {
-                    const selection = this.getAttribute('data-selection');
-                    const odds = this.getAttribute('data-odds');
-                    const matchRow = this.closest('tr');
-                    const matchName = matchRow.querySelector('strong').textContent;
-                    
-                    // Toggle selection
-                    if (this.classList.contains('selected')) {
-                        this.classList.remove('selected');
-                        removeFromBetSlip(selection);
-                    } else {
-                        this.classList.add('selected');
-                        addToBetSlip(matchName, selection, odds);
-                    }
-                    
-                    // Update bet type and summary
-                    updateBetType();
-                    updateBetSummary();
-                });
-            });
-            
-            function addToBetSlip(match, selection, odds) {
-                // Show bet slip if hidden
-                betSlip.style.display = 'block';
-                
-                // Remove empty message
-                if (emptyBetSlip) {
-                    emptyBetSlip.style.display = 'none';
+            // Prevent double-tap zoom on mobile
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(e) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
                 }
-                
-                // Check if selection already exists
-                const existingIndex = betSelections.findIndex(item => 
-                    item.match === match && item.selection === selection);
-                
-                if (existingIndex === -1) {
-                    // Add new selection
-                    betSelections.push({ 
-                        match, 
-                        selection, 
-                        odds: parseFloat(odds),
-                        stake: 0
-                    });
-                    
-                    // Create bet item
-                    const betItem = document.createElement('div');
-                    betItem.className = 'bet-item';
-                    betItem.innerHTML = `
-                        <div><strong>${match}</strong></div>
-                        <div>${selection} @ ${odds}</div>
-                        <div>
-                            <input type="number" class="stake-input" placeholder="Stake" min="1" value="0">
-                            <button class="remove-bet" style="background: none; border: none; color: red; cursor: pointer; margin-left: 10px;">×</button>
-                        </div>
-                    `;
-                    
-                    // Add remove functionality
-                    const removeButton = betItem.querySelector('.remove-bet');
-                    removeButton.addEventListener('click', function() {
-                        betItem.remove();
-                        removeFromBetSlip(selection);
-                        
-                        // Remove selection highlight
-                        const selectedCell = document.querySelector(`.odds-cell[data-selection="${selection}"]`);
-                        if (selectedCell) {
-                            selectedCell.classList.remove('selected');
-                        }
-                        
-                        // Update bet type and summary
-                        updateBetType();
-                        updateBetSummary();
-                        
-                        // Show empty message if no bets
-                        if (betSlipContent.children.length === 1) { // Only the empty message remains
-                            emptyBetSlip.style.display = 'block';
-                            betSummary.style.display = 'none';
-                        }
-                    });
-                    
-                    // Add stake change listener
-                    const stakeInput = betItem.querySelector('.stake-input');
-                    stakeInput.addEventListener('input', function() {
-                        const stakeValue = parseFloat(this.value) || 0;
-                        updateStake(selection, stakeValue);
-                        updateBetSummary();
-                    });
-                    
-                    betSlipContent.appendChild(betItem);
-                }
-            }
-            
-            function removeFromBetSlip(selection) {
-                betSelections = betSelections.filter(item => item.selection !== selection);
-            }
-            
-            function updateStake(selection, stake) {
-                const betIndex = betSelections.findIndex(item => item.selection === selection);
-                if (betIndex !== -1) {
-                    betSelections[betIndex].stake = stake;
-                }
-            }
-            
-            function updateBetType() {
-                if (betSelections.length === 0) {
-                    betTypeIndicator.textContent = "Single";
-                    betTypeIndicator.className = "bet-type-indicator single-bet";
-                } else if (betSelections.length === 1) {
-                    betTypeIndicator.textContent = "Single Bet";
-                    betTypeIndicator.className = "bet-type-indicator single-bet";
-                } else {
-                    betTypeIndicator.textContent = "Parlay Bet";
-                    betTypeIndicator.className = "bet-type-indicator parlay-bet";
-                }
-            }
-            
-            function updateBetSummary() {
-                if (betSelections.length === 0) {
-                    betSummary.style.display = 'none';
-                    return;
-                }
-                
-                betSummary.style.display = 'block';
-                
-                // Calculate total odds
-                let totalOdds = 1;
-                betSelections.forEach(bet => {
-                    totalOdds *= bet.odds;
-                });
-                
-                // Calculate total stake
-                totalStake = betSelections.reduce((sum, bet) => sum + bet.stake, 0);
-                
-                // Calculate potential win
-                const potentialWin = totalStake * totalOdds;
-                
-                // Update display
-                document.getElementById('totalOdds').textContent = totalOdds.toFixed(2);
-                document.getElementById('totalStake').textContent = totalStake.toFixed(2);
-                document.getElementById('potentialWin').textContent = '$' + potentialWin.toFixed(2);
-            }
-            
-            // Close bet slip
-            closeBetSlip.addEventListener('click', function() {
-                betSlip.style.display = 'none';
-            });
-            
-            // Place bet
-            placeBet.addEventListener('click', function() {
-                if (betSelections.length === 0) {
-                    alert('Please add at least one selection to your bet slip.');
-                    return;
-                }
-                
-                // Check if all stakes are valid
-                const invalidStakes = betSelections.filter(bet => bet.stake <= 0);
-                if (invalidStakes.length > 0) {
-                    alert('Please enter valid stakes for all selections.');
-                    return;
-                }
-                
-                // Check if user has sufficient balance
-                if (totalStake > currentUser.balance) {
-                    alert('Insufficient balance. Please reduce your stake or deposit more funds.');
-                    return;
-                }
-                
-                // Determine bet type
-                const betType = betSelections.length === 1 ? 'Single Bet' : 'Parlay Bet';
-                
-                // Update user balance
-                currentUser.balance -= totalStake;
-                document.getElementById('userBalanceDisplay').textContent = `$${currentUser.balance.toFixed(2)}`;
-                document.getElementById('currentBalance').textContent = `$${currentUser.balance.toFixed(2)}`;
-                document.getElementById('availableBalance').textContent = `$${(currentUser.balance - 50.25).toFixed(2)}`;
-                
-                // In a real implementation, this would submit the bet to a server
-                alert(`${betType} placed successfully!\nTotal Stake: $${totalStake.toFixed(2)}\nPotential Win: $${(totalStake * betSelections.reduce((prod, bet) => prod * bet.odds, 1)).toFixed(2)}`);
-                
-                // Clear bet slip
-                betSlipContent.innerHTML = '<p id="emptyBetSlip">No bets added yet</p>';
-                betSelections = [];
-                totalStake = 0;
-                
-                // Remove selection highlights
-                oddsCells.forEach(cell => {
-                    cell.classList.remove('selected');
-                });
-                
-                // Update empty bet slip reference
-                emptyBetSlip = document.getElementById('emptyBetSlip');
-                betSummary.style.display = 'none';
-                updateBetType();
-                
-                // Update recent activity and statement
-                populateRecentActivity();
-                populateAccountStatement();
-            });
-            
-            // Simulate live odds updates
-            setInterval(() => {
-                // In a real implementation, this would fetch updated odds from a server
-                const liveOddsCells = document.querySelectorAll('.odds-cell');
-                liveOddsCells.forEach(cell => {
-                    // Randomly update some odds to simulate live changes
-                    if (Math.random() > 0.7) {
-                        const currentOddsText = cell.textContent;
-                        if (currentOddsText !== "-") {
-                            const currentOdds = parseFloat(currentOddsText);
-                            const change = (Math.random() * 0.2) - 0.1; // -0.1 to +0.1
-                            const newOdds = Math.round((currentOdds + change) * 100) / 100;
-                            
-                            // Only update if odds changed and it's not currently selected
-                            if (newOdds !== currentOdds && !cell.classList.contains('selected')) {
-                                cell.textContent = newOdds.toFixed(2);
-                                cell.setAttribute('data-odds', newOdds.toFixed(2));
-                                
-                                // Add visual feedback for changed odds
-                                cell.style.backgroundColor = '#fff3cd';
-                                setTimeout(() => {
-                                    cell.style.backgroundColor = '';
-                                }, 1000);
-                            }
-                        }
-                    }
-                });
-            }, 5000); // Update every 5 seconds
-        }
-
-        function populateRecentActivity() {
-            const recentActivityTable = document.getElementById('recentActivityTable');
-            
-            // Sample recent activity data
-            const recentActivity = [
-                { date: "2023-10-15", description: "Sports Bet - Soccer", amount: -25.00, balance: currentUser.balance },
-                { date: "2023-10-14", description: "Deposit", amount: 100.00, balance: currentUser.balance + 25.00 },
-                { date: "2023-10-12", description: "Sports Bet - Basketball", amount: 45.50, balance: currentUser.balance - 75.00 },
-                { date: "2023-10-10", description: "Sports Bet - Tennis", amount: -30.00, balance: currentUser.balance - 120.50 }
-            ];
-            
-            let html = '';
-            recentActivity.forEach(activity => {
-                html += `
-                    <tr>
-                        <td>${activity.date}</td>
-                        <td>${activity.description}</td>
-                        <td class="${activity.amount < 0 ? 'text-danger' : 'text-success'}">${activity.amount < 0 ? '-' : '+'}$${Math.abs(activity.amount).toFixed(2)}</td>
-                        <td>$${activity.balance.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-            
-            recentActivityTable.innerHTML = html;
-        }
-
-        function populateAccountStatement() {
-            const statementTable = document.getElementById('statementTable');
-            
-            // Sample statement data
-            const statementData = [
-                { date: "2023-10-15 14:30", id: "TXN78291", description: "Sports Bet - Soccer: Man City vs Arsenal", amount: -25.00, balance: currentUser.balance, status: "pending" },
-                { date: "2023-10-14 09:15", id: "TXN78245", description: "Deposit - Credit Card", amount: 100.00, balance: currentUser.balance + 25.00, status: "completed" },
-                { date: "2023-10-12 20:45", id: "TXN78189", description: "Win - Soccer: Liverpool vs Chelsea", amount: 45.50, balance: currentUser.balance - 75.00, status: "won" },
-                { date: "2023-10-10 16:20", id: "TXN78123", description: "Sports Bet - Soccer: Real Madrid vs Barcelona", amount: -30.00, balance: currentUser.balance - 120.50, status: "lost" }
-            ];
-            
-            let html = '';
-            statementData.forEach(transaction => {
-                let statusClass = '';
-                let statusText = '';
-                
-                switch(transaction.status) {
-                    case 'pending':
-                        statusClass = 'bet-pending';
-                        statusText = 'Pending';
-                        break;
-                    case 'completed':
-                        statusClass = 'bet-won';
-                        statusText = 'Completed';
-                        break;
-                    case 'won':
-                        statusClass = 'bet-won';
-                        statusText = 'Won';
-                        break;
-                    case 'lost':
-                        statusClass = 'bet-lost';
-                        statusText = 'Lost';
-                        break;
-                }
-                
-                html += `
-                    <tr>
-                        <td>${transaction.date}</td>
-                        <td>${transaction.id}</td>
-                        <td>${transaction.description}</td>
-                        <td class="${transaction.amount < 0 ? 'text-danger' : 'text-success'}">${transaction.amount < 0 ? '-' : '+'}$${Math.abs(transaction.amount).toFixed(2)}</td>
-                        <td>$${transaction.balance.toFixed(2)}</td>
-                        <td><span class="${statusClass}">${statusText}</span></td>
-                    </tr>
-                `;
-            });
-            
-            statementTable.innerHTML = html;
-        }
+                lastTouchEnd = now;
+            }, false);
+        });
     </script>
 </body>
 </html>
